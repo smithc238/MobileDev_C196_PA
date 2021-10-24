@@ -87,3 +87,7 @@ fabric.properties
 .externalNativeBuild
 .cxx
 local.properties
+
+# User added
+.project
+.settings/
