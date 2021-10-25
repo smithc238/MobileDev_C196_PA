@@ -1,5 +1,7 @@
-package com.mySchool.mobiledev_c196_pa.ui;
+package com.mySchool.mobiledev_c196_pa.ui.terms;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,11 @@ import java.util.List;
 
 public class MyTermsAdapter extends RecyclerView.Adapter<MyTermsAdapter.MyTermsHolder> {
     private List<Term> terms = new ArrayList<>();
+    private final Context context;
+
+    public MyTermsAdapter(Context context) {
+        this.context = context;
+    }
 
     @NonNull
     @Override
@@ -49,6 +56,17 @@ public class MyTermsAdapter extends RecyclerView.Adapter<MyTermsAdapter.MyTermsH
             textViewTitle = itemView.findViewById(R.id.term_item_title);
             textViewStart = itemView.findViewById(R.id.term_item_start);
             textViewEnd = itemView.findViewById(R.id.term_item_end);
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                Term current = terms.get(position);
+                Intent intent = new Intent(context,DetailedTermActivity.class);
+                intent.putExtra("id",current.getId());
+                intent.putExtra("title",current.getTitle());
+                intent.putExtra("start",current.getStart());
+                intent.putExtra("end",current.getEnd());
+                context.startActivity(intent);
+            });
         }
     }
 

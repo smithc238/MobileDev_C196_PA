@@ -6,4 +6,10 @@
     <string name="term_title">Term Title</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
+    <string name="date_dash">-</string>
+    <string name="status">Status</string>
+    <string name="course_title">Course Title</string>
+    <string name="note">Note</string>
+    <string name="assessments">Assessments</string>
+    <string name="optional_note_for_the_course">Optional note for the course.</string>
 </resources>

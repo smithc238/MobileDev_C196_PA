@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MyTermsActivity">
+    tools:context=".ui.terms.MyTermsActivity">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/term_recycler_view"
         android:layout_width="match_parent"

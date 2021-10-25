@@ -10,7 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySchool">
         <activity
-            android:name=".ui.MyTermsActivity"
+            android:name=".ui.terms.DetailedTermActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.terms.MyTermsActivity"/>
+        <activity
+            android:name=".ui.terms.MyTermsActivity"
             android:exported="false"
             android:label="@string/my_terms" />
         <activity
@@ -19,6 +23,7 @@
             android:theme="@style/Theme.MySchoolNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
