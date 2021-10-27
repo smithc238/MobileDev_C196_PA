@@ -7,59 +7,71 @@
     tools:context=".ui.terms.DetailedTermActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/detailed_term_date_dash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date_dash"
+        app:layout_constraintBottom_toTopOf="@+id/detailed_term_course_header"
+        app:layout_constraintEnd_toStartOf="@+id/detailed_term_end"
+        app:layout_constraintStart_toEndOf="@+id/detailed_term_start" />
+
+    <TextView
+        android:id="@+id/detailed_term_start_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:text="Start"
-        app:layout_constraintEnd_toStartOf="@+id/guideline1"
+        android:text="@string/start"
+        app:layout_constraintEnd_toStartOf="@+id/detailed_term_guideline"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/detailed_term_end_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="End"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        android:text="@string/end"
+        app:layout_constraintStart_toStartOf="@+id/detailed_term_guideline"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/detailed_term_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="Start Date"
-        app:layout_constraintEnd_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:text="@string/start_date"
+        app:layout_constraintEnd_toStartOf="@+id/detailed_term_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_term_start_header" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/detailed_term_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="End Date"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        android:text="@string/end_date"
+        app:layout_constraintStart_toStartOf="@+id/detailed_term_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/detailed_term_end_header" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/detailed_term_course_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Courses"
+        android:text="@string/courses"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/detailed_term_start" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="409dp"
-        android:layout_height="671dp"
+        android:id="@+id/detailed_term_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/detailed_term_course_header"
+        tools:listitem="@layout/course_item" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline1"
+        android:id="@+id/detailed_term_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

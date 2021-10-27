@@ -13,20 +13,17 @@ import java.util.concurrent.ExecutorService;
 
 public class TermRepo {
     private TermDao termDao;
-    private LiveData<List<Term>> allTerms;
     private final ExecutorService dbExecutor;
-
 
     public TermRepo(Application application) {
         MySchoolDatabase db = MySchoolDatabase.getInstance(application);
         termDao = db.termDao();
-        allTerms = termDao.getAllTerms();
         dbExecutor = MySchoolExecutorService.getService();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void insert(Term term) {
@@ -54,6 +51,6 @@ public class TermRepo {
     }
 
     public LiveData<List<Term>> getAllTerms() {
-        return allTerms;
+        return termDao.getAllTerms();
     }
 }

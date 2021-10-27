@@ -28,5 +28,4 @@ public class MyTermsActivity extends AppCompatActivity {
         termViewModel = new ViewModelProvider(this).get(TermViewModel.class);
         termViewModel.getAllTerms().observe(this, terms -> adapter.setTerms(terms));
     }
-
 }

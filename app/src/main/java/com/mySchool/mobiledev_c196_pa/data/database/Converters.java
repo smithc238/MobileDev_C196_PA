@@ -2,6 +2,8 @@ package com.mySchool.mobiledev_c196_pa.data.database;
 
 import androidx.room.TypeConverter;
 
+import com.mySchool.mobiledev_c196_pa.data.entities.Status;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -21,4 +23,10 @@ public class Converters {
     public static ZonedDateTime stringToZonedDateTime(String text) {
         return text == null ? null : ZonedDateTime.parse(text,ISO);
     }
+
+    @TypeConverter
+    public int fromStatus(Status status) {return status.getNum();}
+
+    @TypeConverter
+    public Status toStatus(int num) {return Status.values()[num];}
 }

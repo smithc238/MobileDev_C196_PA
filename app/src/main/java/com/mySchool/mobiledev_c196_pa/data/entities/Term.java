@@ -2,21 +2,17 @@ package com.mySchool.mobiledev_c196_pa.data.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 
 @Entity(tableName = "Terms")
 public class Term {
-
-    @PrimaryKey(autoGenerate = true)
-    private long id;
-
-    @NonNull
-    private String title;
-
+    @PrimaryKey(autoGenerate = true) private long id;
+    @NonNull private String title;
     private ZonedDateTime start;
-
     private ZonedDateTime end;
 
     public Term(String title, ZonedDateTime start, ZonedDateTime end) {
