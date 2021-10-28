@@ -1,4 +1,4 @@
-package com.mySchool.mobiledev_c196_pa.viewModel;
+package com.mySchool.mobiledev_c196_pa.viewmodels;
 
 import android.app.Application;
 

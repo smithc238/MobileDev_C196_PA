@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.mySchool.mobiledev_c196_pa.R;
-import com.mySchool.mobiledev_c196_pa.ui.terms.MyTermsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loginListener(View view) {
-        Intent intent = new Intent(MainActivity.this, MyTermsActivity.class);
+        Intent intent = new Intent(MainActivity.this, ListActivity.class);
         startActivity(intent);
     }
 }

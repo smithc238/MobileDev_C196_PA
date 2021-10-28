@@ -1,4 +1,4 @@
-package com.mySchool.mobiledev_c196_pa.ui.terms;
+package com.mySchool.mobiledev_c196_pa.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

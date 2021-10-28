@@ -1,4 +1,4 @@
-package com.mySchool.mobiledev_c196_pa.ui.terms;
+package com.mySchool.mobiledev_c196_pa.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
+import com.mySchool.mobiledev_c196_pa.ui.DetailActivity;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class MyTermsAdapter extends RecyclerView.Adapter<MyTermsAdapter.MyTermsH
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 Term current = terms.get(position);
-                Intent intent = new Intent(context,DetailedTermActivity.class);
+                Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("id",current.getId());
                 intent.putExtra("title",current.getTitle());
                 intent.putExtra("start",current.getStart());

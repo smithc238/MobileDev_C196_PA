@@ -25,6 +25,9 @@ public interface TermDao {
     @Query("DELETE FROM Terms")
     void deleteAllTerms();
 
+    @Query("SELECT * FROM Terms WHERE id = :id")
+    LiveData<List<Term>> getTerm(long id);
+
     @Query("SELECT * FROM Terms")
     LiveData<List<Term>> getAllTerms();
 }

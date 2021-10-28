@@ -10,11 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySchool">
         <activity
-            android:name=".ui.terms.DetailedTermActivity"
+            android:name=".ui.DetailActivity"
             android:exported="false"
-            android:parentActivityName=".ui.terms.MyTermsActivity"/>
+            android:parentActivityName=".ui.ListActivity"/>
         <activity
-            android:name=".ui.terms.MyTermsActivity"
+            android:name=".ui.ListActivity"
             android:exported="false"
             android:label="@string/my_terms" />
         <activity

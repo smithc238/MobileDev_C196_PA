@@ -1,13 +1,20 @@
-package com.mySchool.mobiledev_c196_pa.ui.terms;
+package com.mySchool.mobiledev_c196_pa.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.mySchool.mobiledev_c196_pa.R;
 
@@ -48,23 +55,25 @@ public class AddEditTermFragment extends Fragment {
             edit = getArguments().getBoolean(EDIT_TERM);
             editTermID = getArguments().getLong(EDIT_TERM_ID);
         }
+        setHasOptionsMenu(true);
+        if (edit) {
+            getActivity().setTitle("Edit Term");
+        } else {
+            getActivity().setTitle("Add Term");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_add_edit_term, container, false);
-        TextView textView = v.findViewById(R.id.hello_blank);
         if (getArguments() != null) {
-            textView.setText(edit + " " + editTermID);
-//            if (edit) {
-//                getActivity().getActionBar().setTitle("Edit Term");
-//            } else {
-//                getActivity().getActionBar().setTitle("Add Term");
-//            }
+            if (edit) {
+
+            } else {
+
+            }
         }
         return v;
     }
-
-
 }
