@@ -17,6 +17,10 @@ import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter for TermsList
+ * https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/RecyclerView
+ */
 public class MyTermsAdapter extends RecyclerView.Adapter<MyTermsAdapter.MyTermsHolder> {
     private List<Term> terms = new ArrayList<>();
     private final Context context;

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/myTerms_add_term"
+        android:icon="@drawable/ic_add"
+        android:title="@string/add_term"
+        app:showAsAction="ifRoom"/>
+</menu>

@@ -17,4 +17,6 @@
     <string name="courses">Courses</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="delete_all_terms">Delete All Terms</string>
+    <string name="add_term">Add Term</string>
 </resources>

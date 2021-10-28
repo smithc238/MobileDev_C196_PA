@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mySchool.mobiledev_c196_pa.R;
 
@@ -16,34 +17,26 @@ import com.mySchool.mobiledev_c196_pa.R;
  * create an instance of this fragment.
  */
 public class AddEditTermFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String EDIT_TERM = "edit";
+    private static final String EDIT_TERM_ID = "id";
+    private boolean edit;
+    private long editTermID;
 
     public AddEditTermFragment() {
-        // Required empty public constructor
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param edit edit term = true, add term = false.
+     * @param termID term ID to edit, null for add.
      * @return A new instance of fragment AddEditTermFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static AddEditTermFragment newInstance(String param1, String param2) {
+    public static AddEditTermFragment newInstance(boolean edit, long termID) {
         AddEditTermFragment fragment = new AddEditTermFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putBoolean(EDIT_TERM, edit);
+        args.putLong(EDIT_TERM_ID, termID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,15 +45,26 @@ public class AddEditTermFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            edit = getArguments().getBoolean(EDIT_TERM);
+            editTermID = getArguments().getLong(EDIT_TERM_ID);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_edit_term, container, false);
+        View v = inflater.inflate(R.layout.fragment_add_edit_term, container, false);
+        TextView textView = v.findViewById(R.id.hello_blank);
+        if (getArguments() != null) {
+            textView.setText(edit + " " + editTermID);
+//            if (edit) {
+//                getActivity().getActionBar().setTitle("Edit Term");
+//            } else {
+//                getActivity().getActionBar().setTitle("Add Term");
+//            }
+        }
+        return v;
     }
+
+
 }
