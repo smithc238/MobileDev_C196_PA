@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
-import com.mySchool.mobiledev_c196_pa.ui.DetailActivity;
+import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailActivity;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 
 import java.util.ArrayList;
@@ -22,24 +22,24 @@ import java.util.List;
  * Adapter for TermsList
  * https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/RecyclerView
  */
-public class MyTermsAdapter extends RecyclerView.Adapter<MyTermsAdapter.MyTermsHolder> {
+public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.TermHolder> {
     private List<Term> terms = new ArrayList<>();
     private final Context context;
 
-    public MyTermsAdapter(Context context) {
+    public TermListAdapter(Context context) {
         this.context = context;
     }
 
     @NonNull
     @Override
-    public MyTermsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TermHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.term_item,parent,false);
-        return new MyTermsHolder(itemView);
+        return new TermHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyTermsHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TermHolder holder, int position) {
         Term term = terms.get(position);
         holder.textViewTitle.setText(term.getTitle());
         holder.textViewStart.setText(DateTimeConv.dateToStringLocal(term.getStart()));
@@ -51,12 +51,12 @@ public class MyTermsAdapter extends RecyclerView.Adapter<MyTermsAdapter.MyTermsH
         return terms.size();
     }
 
-    class MyTermsHolder extends RecyclerView.ViewHolder {
+    class TermHolder extends RecyclerView.ViewHolder {
         private TextView textViewTitle;
         private TextView textViewStart;
         private TextView textViewEnd;
 
-        public MyTermsHolder(@NonNull View itemView) {
+        public TermHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.term_item_title);
             textViewStart = itemView.findViewById(R.id.term_item_start);

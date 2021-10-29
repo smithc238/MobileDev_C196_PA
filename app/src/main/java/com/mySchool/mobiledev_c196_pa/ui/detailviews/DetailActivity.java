@@ -1,4 +1,4 @@
-package com.mySchool.mobiledev_c196_pa.ui;
+package com.mySchool.mobiledev_c196_pa.ui.detailviews;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -11,6 +11,7 @@ import android.util.Log;
 import com.mySchool.mobiledev_c196_pa.R;
 
 public class DetailActivity extends AppCompatActivity {
+    private final FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +22,8 @@ public class DetailActivity extends AppCompatActivity {
         setTitle(intent.getStringExtra("title"));
         long id = intent.getLongExtra("id",-1);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.detail_view_host);
-
-        if (fragment == null) {
-            Log.i("DetailActivity Term ID",String.valueOf(id));
-            fragment = DetailedTermFragment.newInstance(id);
+        if (savedInstanceState == null) {
+            Fragment fragment = DetailedTermFragment.newInstance(id);
             fragmentManager.beginTransaction()
                     .add(R.id.detail_view_host,fragment)
                     .commit();

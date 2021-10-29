@@ -4,6 +4,6 @@
     android:id="@+id/detail_view_host"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DetailActivity">
+    tools:context=".ui.detailviews.DetailActivity">
 
 </androidx.fragment.app.FragmentContainerView>

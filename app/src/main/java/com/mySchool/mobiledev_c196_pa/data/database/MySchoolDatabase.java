@@ -11,15 +11,17 @@ import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.mySchool.mobiledev_c196_pa.data.dao.CourseDao;
+import com.mySchool.mobiledev_c196_pa.data.dao.InstructorDao;
 import com.mySchool.mobiledev_c196_pa.data.dao.TermDao;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
+import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
 import com.mySchool.mobiledev_c196_pa.data.entities.Status;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
 import com.mySchool.mobiledev_c196_pa.data.repository.MySchoolExecutorService;
 
 import java.time.ZonedDateTime;
 
-@Database(entities = {Term.class,Course.class}, version = 1)
+@Database(entities = {Term.class,Course.class,Instructor.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class MySchoolDatabase extends RoomDatabase {
     private static final String DATABASE_NAME = "mySchoolDB";
@@ -38,6 +40,7 @@ public abstract class MySchoolDatabase extends RoomDatabase {
 
     public abstract TermDao termDao();
     public abstract CourseDao courseDao();
+    public abstract InstructorDao instructorDao();
 
     private static RoomDatabase.Callback mySchoolCallback = new Callback() {
         @Override
@@ -52,6 +55,9 @@ public abstract class MySchoolDatabase extends RoomDatabase {
                 INSTANCE.courseDao().insert(new Course("Course 2", Status.COMPLETE,today.plusWeeks(1),today.plusWeeks(2),"course 2 note",1));
                 INSTANCE.courseDao().insert(new Course("Course 3", Status.IN_PROGRESS,today.plusWeeks(2),today.plusWeeks(3),"course 3 note",2));
                 INSTANCE.courseDao().insert(new Course("Course 4", Status.PLAN_TO_TAKE,today.plusWeeks(3),today.plusWeeks(4),null,3));
+                INSTANCE.instructorDao().insert(new Instructor("John Doe","578-354-2256","john.doe@mySchool.com"));
+                INSTANCE.instructorDao().insert(new Instructor("Jane Doe","578-354-8843","jane.doe@mySchool.com"));
+                INSTANCE.instructorDao().insert(new Instructor("Joe Snuffy","578-354-1775","joe.snuffy@mySchool.com"));
             });
         }
     };

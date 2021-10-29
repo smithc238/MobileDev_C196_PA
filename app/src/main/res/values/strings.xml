@@ -18,4 +18,11 @@
     <string name="delete_all_terms">Delete All Terms</string>
     <string name="add_term">Add Term</string>
     <string name="add_course">Add Course</string>
+    <string name="add_a_course_to_save_the_term">This term has no courses.\nAdd a course to save the term.</string>
+    <string name="instructor_name">Instructor Name</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="my_school_instructors">My School Instructors</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
 </resources>

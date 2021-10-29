@@ -21,12 +21,8 @@ public class CourseRepo {
         MySchoolDatabase db = MySchoolDatabase.getInstance(application);
         courseDao = db.courseDao();
         dbExecutor = MySchoolExecutorService.getService();
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
+
     public void insert(Course course) {
         dbExecutor.execute(() -> courseDao.insert(course));
     }

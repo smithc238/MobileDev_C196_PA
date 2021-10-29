@@ -1,4 +1,4 @@
-package com.mySchool.mobiledev_c196_pa.ui;
+package com.mySchool.mobiledev_c196_pa.ui.detailviews;
 
 import android.os.Bundle;
 
@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mySchool.mobiledev_c196_pa.R;
-import com.mySchool.mobiledev_c196_pa.adapters.DetailedTermAdapter;
+import com.mySchool.mobiledev_c196_pa.adapters.CourseListAdapter;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
@@ -55,7 +55,7 @@ public class DetailedTermFragment extends Fragment {
         RecyclerView recyclerView = v.findViewById(R.id.detailed_term_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        DetailedTermAdapter adapter = new DetailedTermAdapter(v.getContext());
+        CourseListAdapter adapter = new CourseListAdapter(v.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
 
@@ -68,7 +68,6 @@ public class DetailedTermFragment extends Fragment {
         courseViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
             adapter.setCourses(courses);
         });
-
         return v;
     }
 }

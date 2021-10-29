@@ -16,11 +16,11 @@ import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailedTermAdapter extends RecyclerView.Adapter<DetailedTermAdapter.CourseHolder> {
+public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.CourseHolder> {
     private List<Course> courses = new ArrayList<>();
     private final Context context;
 
-    public DetailedTermAdapter(Context context) {
+    public CourseListAdapter(Context context) {
         this.context = context;
     }
 

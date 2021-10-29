@@ -1,6 +1,5 @@
-package com.mySchool.mobiledev_c196_pa.ui;
+package com.mySchool.mobiledev_c196_pa.ui.listviews;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,10 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.mySchool.mobiledev_c196_pa.R;
-import com.mySchool.mobiledev_c196_pa.adapters.MyTermsAdapter;
+import com.mySchool.mobiledev_c196_pa.adapters.TermListAdapter;
+import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditTermFragment;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
 public class MyTermsListFragment extends Fragment {
@@ -32,6 +31,7 @@ public class MyTermsListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        getActivity().setTitle("My Terms");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class MyTermsListFragment extends Fragment {
         RecyclerView recyclerView = v.findViewById(R.id.myTerms_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        MyTermsAdapter adapter = new MyTermsAdapter(v.getContext());
+        TermListAdapter adapter = new TermListAdapter(v.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
 
@@ -53,7 +53,7 @@ public class MyTermsListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.list_view_menu,menu);
+        inflater.inflate(R.menu.mytermslist_menu,menu);
     }
 
     @Override
@@ -61,8 +61,7 @@ public class MyTermsListFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.list_view_add) {
             Fragment addTerm = AddEditTermFragment.newInstance(false,-1);
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
+            getParentFragmentManager().beginTransaction()
                     .replace(R.id.list_view_host,addTerm)
                     .commit();
             return true;

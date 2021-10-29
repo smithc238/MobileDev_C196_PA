@@ -21,11 +21,6 @@ public class TermRepo {
         MySchoolDatabase db = MySchoolDatabase.getInstance(application);
         termDao = db.termDao();
         dbExecutor = MySchoolExecutorService.getService();
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void insert(Term term) {

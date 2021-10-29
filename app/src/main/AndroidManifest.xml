@@ -10,13 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MySchool">
         <activity
-            android:name=".ui.DetailActivity"
+            android:name=".ui.detailviews.DetailActivity"
             android:exported="false"
-            android:parentActivityName=".ui.ListActivity"/>
+            android:parentActivityName=".ui.listviews.ListActivity"/>
         <activity
-            android:name=".ui.ListActivity"
-            android:exported="false"
-            android:label="@string/my_terms" />
+            android:name=".ui.listviews.ListActivity"
+            android:exported="false"/>
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
