@@ -8,6 +8,7 @@ import com.mySchool.mobiledev_c196_pa.data.dao.InstructorDao;
 import com.mySchool.mobiledev_c196_pa.data.database.MySchoolDatabase;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -34,6 +35,10 @@ public class InstructorRepo {
 
     public void deleteAllInstructors() {
         dbExecutor.execute(() -> instructorDao.deleteAllInstructors());
+    }
+
+    public LiveData<List<Instructor>> getInstructorById(long id) {
+        return instructorDao.getInstructorById(id);
     }
 
     public LiveData<List<Instructor>> getAllInstructors() {

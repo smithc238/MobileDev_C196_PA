@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstructorsListAdapter extends RecyclerView.Adapter<InstructorsListAdapter.InstructorHolder> {
+    private OnInstructorClickListener listener;
     private List<Instructor> instructors = new ArrayList<>();
     private final Context context;
 
@@ -35,8 +36,6 @@ public class InstructorsListAdapter extends RecyclerView.Adapter<InstructorsList
     public void onBindViewHolder(@NonNull InstructorHolder holder, int position) {
         Instructor instructor = instructors.get(position);
         holder.textViewName.setText(instructor.getName());
-        holder.textViewPhone.setText(instructor.getPhone());
-        holder.textViewEmail.setText(instructor.getEmail());
     }
 
     @Override
@@ -46,19 +45,30 @@ public class InstructorsListAdapter extends RecyclerView.Adapter<InstructorsList
 
     class InstructorHolder extends RecyclerView.ViewHolder  {
         private TextView textViewName;
-        private TextView textViewPhone;
-        private TextView textViewEmail;
 
         public InstructorHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.instructor_item_name);
-            textViewPhone = itemView.findViewById(R.id.instructor_item_phone);
-            textViewEmail = itemView.findViewById(R.id.instructor_item_email);
+
+            itemView.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION) {
+                    listener.onInstructorClick(instructors.get(position));
+                }
+            });
         }
     }
 
     public void setInstructors(List<Instructor> instructors) {
         this.instructors = instructors;
         notifyDataSetChanged();
+    }
+
+    public interface OnInstructorClickListener {
+        void onInstructorClick(Instructor instructor);
+    }
+
+    public void setOnInstructorClickListener(OnInstructorClickListener listener) {
+        this.listener = listener;
     }
 }

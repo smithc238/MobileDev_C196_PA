@@ -23,6 +23,7 @@ import java.util.List;
  * https://developer.android.com/reference/kotlin/androidx/recyclerview/widget/RecyclerView
  */
 public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.TermHolder> {
+    private OnTermClickListener listener;
     private List<Term> terms = new ArrayList<>();
     private final Context context;
 
@@ -63,14 +64,10 @@ public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.TermHo
             textViewEnd = itemView.findViewById(R.id.term_item_end);
 
             itemView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                Term current = terms.get(position);
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("id",current.getId());
-                intent.putExtra("title",current.getTitle());
-                intent.putExtra("start",current.getStart());
-                intent.putExtra("end",current.getEnd());
-                context.startActivity(intent);
+                int position = getBindingAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION) {
+                    listener.onTermClick(terms.get(position));
+                }
             });
         }
     }
@@ -79,4 +76,10 @@ public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.TermHo
         this.terms = terms;
         notifyDataSetChanged();
     }
+
+    public interface OnTermClickListener {
+        void onTermClick(Term term);
+    }
+
+    public void setOnTermClickListener(OnTermClickListener listener) {this.listener = listener;}
 }

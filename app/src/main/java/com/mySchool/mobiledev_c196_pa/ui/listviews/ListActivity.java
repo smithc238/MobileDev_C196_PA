@@ -1,11 +1,11 @@
 package com.mySchool.mobiledev_c196_pa.ui.listviews;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -36,7 +36,9 @@ public class ListActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
-            fragmentLoader(new MyTermsListFragment());
+            fragmentManager.beginTransaction()
+                    .add(R.id.list_view_host,new MyTermsListFragment())
+                    .commit();
             navigationView.setCheckedItem(R.id.nav_myTermsList);
         }
     }
@@ -45,9 +47,14 @@ public class ListActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_myTermsList) {
-            fragmentLoader(new MyTermsListFragment());
+            fragmentManager.beginTransaction()
+                    .replace(R.id.list_view_host, new MyTermsListFragment())
+                    .commit();
         } else if (id == R.id.nav_instructorList) {
-            fragmentLoader(new InstructorListFragment());
+            fragmentManager.beginTransaction()
+                    .replace(R.id.list_view_host,new InstructorListFragment())
+                    .addToBackStack(null)
+                    .commit();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -55,7 +62,13 @@ public class ListActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        actionBarDrawerToggle.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -66,12 +79,5 @@ public class ListActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void fragmentLoader(Fragment fragment) {
-        fragmentManager.beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.list_view_host,fragment)
-                .commit();
     }
 }

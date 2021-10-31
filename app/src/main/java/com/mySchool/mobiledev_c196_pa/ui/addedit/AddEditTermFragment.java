@@ -2,6 +2,7 @@ package com.mySchool.mobiledev_c196_pa.ui.addedit;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,10 +22,9 @@ import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
 public class AddEditTermFragment extends Fragment {
-    private static final String EDIT_TERM = "edit";
     private static final String EDIT_TERM_ID = "id";
     private boolean edit = false;
-    private long editTermID = -1;
+    private long id = -1;
     private TermViewModel termViewModel;
     private CourseViewModel courseViewModel;
 
@@ -34,14 +34,12 @@ public class AddEditTermFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     * @param edit edit term = true, add term = false.
-     * @param termID term ID for edit.
+     * @param termID term ID > 0 for edit, < 0 is add.
      * @return A new instance of fragment AddEditTermFragment.
      */
-    public static AddEditTermFragment newInstance(boolean edit, long termID) {
+    public static AddEditTermFragment newInstance(long termID) {
         AddEditTermFragment fragment = new AddEditTermFragment();
         Bundle args = new Bundle();
-        args.putBoolean(EDIT_TERM, edit);
         args.putLong(EDIT_TERM_ID, termID);
         fragment.setArguments(args);
         return fragment;
@@ -51,9 +49,9 @@ public class AddEditTermFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            edit = getArguments().getBoolean(EDIT_TERM);
-            editTermID = getArguments().getLong(EDIT_TERM_ID);
-            if (edit) {
+            id = getArguments().getLong(EDIT_TERM_ID);
+            if (id > 0) {
+                edit = true;
                 getActivity().setTitle("Edit Term");
             } else {
                 getActivity().setTitle("Add Term");
@@ -82,12 +80,12 @@ public class AddEditTermFragment extends Fragment {
 
         if (edit) {
             termViewModel = new ViewModelProvider(this).get(TermViewModel.class);
-            termViewModel.getTerm(editTermID).observe(getViewLifecycleOwner(), terms -> {
+            termViewModel.getTerm(id).observe(getViewLifecycleOwner(), terms -> {
                 start.setText(DateTimeConv.dateToStringLocal(terms.get(0).getStart()));
                 end.setText(DateTimeConv.dateToStringLocal(terms.get(0).getEnd()));
             });
             courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
-            courseViewModel.getAssociatedCourses(editTermID).observe(getViewLifecycleOwner(), courses -> {
+            courseViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
                 adapter.setCourses(courses);
             });
         }

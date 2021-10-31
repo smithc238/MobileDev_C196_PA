@@ -18,11 +18,10 @@ import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
-
-
 public class DetailedTermFragment extends Fragment {
-
+    public static final String TERM_TITLE = "title";
     private static final String TERM_ID = "id";
+    private String title;
     private long id;
     private TermViewModel termViewModel;
     private CourseViewModel courseViewModel;
@@ -30,9 +29,18 @@ public class DetailedTermFragment extends Fragment {
     public DetailedTermFragment() {
     }
 
-    public static DetailedTermFragment newInstance(long id) {
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param title Term title.
+     * @param id Term ID.
+     * @return A new instance of fragment DetailedTermFragment.
+     */
+    public static DetailedTermFragment newInstance(String title, long id) {
         DetailedTermFragment fragment = new DetailedTermFragment();
         Bundle args = new Bundle();
+        args.putString(TERM_TITLE,title);
         args.putLong(TERM_ID, id);
         fragment.setArguments(args);
         return fragment;
@@ -42,8 +50,10 @@ public class DetailedTermFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            title = getArguments().getString(TERM_TITLE);
             id = getArguments().getLong(TERM_ID);
         }
+        getActivity().setTitle(title);
     }
 
     @Override
