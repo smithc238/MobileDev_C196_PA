@@ -14,10 +14,10 @@ import androidx.room.PrimaryKey;
 
 import java.time.ZonedDateTime;
 
-@Entity(tableName = "Courses",
-        foreignKeys = @ForeignKey(entity = Term.class,
-        parentColumns = "id", childColumns = "termID",
-                onDelete = SET_NULL))
+@Entity(tableName = "Courses")
+//        foreignKeys = @ForeignKey(entity = Term.class,
+//        parentColumns = "id", childColumns = "termID",
+//                onDelete = SET_NULL))
 public class Course {
     @PrimaryKey(autoGenerate = true) private long id;
     @NonNull private String title;

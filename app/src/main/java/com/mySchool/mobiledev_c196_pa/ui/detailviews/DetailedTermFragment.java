@@ -72,8 +72,8 @@ public class DetailedTermFragment extends Fragment {
         title = v.findViewById(R.id.term_title);
         start = v.findViewById(R.id.term_start);
         end = v.findViewById(R.id.term_end);
-        addButton = v.findViewById(R.id.term_floatingActionButton);
         noCourses = v.findViewById(R.id.term_noCourses);
+        addButton = v.findViewById(R.id.term_floatingActionButton);
         setReadOnly();
 
         RecyclerView recyclerView = v.findViewById(R.id.term_recycler_view);
@@ -82,15 +82,16 @@ public class DetailedTermFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
 
-        termViewModel = new ViewModelProvider(this).get(TermViewModel.class);
+        termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
         termViewModel.getTermById(id).observe(getViewLifecycleOwner(), terms -> {
-            if (terms != null) {
+            if (!terms.isEmpty()) {
+                termViewModel.setTerm(terms.get(0));
                 title.setText(terms.get(0).getTitle());
                 start.setText(DateTimeConv.dateToStringLocal(terms.get(0).getStart()));
                 end.setText(DateTimeConv.dateToStringLocal(terms.get(0).getEnd()));
             }
         });
-        courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
+        courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
         courseViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
             if (!courses.isEmpty()) {
                 adapter.setCourses(courses);
@@ -122,12 +123,11 @@ public class DetailedTermFragment extends Fragment {
             if (noCourses.getVisibility() == View.GONE) {
                 AlertDialog alert = new AlertDialog.Builder(getActivity())
                         .setMessage(R.string.remove_courses)
-                        .setPositiveButton(R.string.ok, (dialog, which) -> {
-                            dialog.dismiss();
-                        }).create();
+                        .setPositiveButton(R.string.ok,
+                                (dialog, which) -> dialog.dismiss()).create();
                 alert.show();
             } else {
-                termViewModel.delete(termViewModel.getTermById(this.id).getValue().get(0));
+                termViewModel.delete(termViewModel.getTerm().getValue());
                 getActivity().finish();
             }
             return true;

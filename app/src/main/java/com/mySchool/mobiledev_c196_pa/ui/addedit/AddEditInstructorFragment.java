@@ -56,7 +56,7 @@ public class AddEditInstructorFragment extends Fragment {
     /**
      * Method determines if instance is add or edit by the id in the bundle. Positive = edit, negative = add.
      * Sets title appropriately.
-     * @param savedInstanceState
+     * @param savedInstanceState savedInstanceState.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,7 +124,7 @@ public class AddEditInstructorFragment extends Fragment {
            }
         }
         if (id == R.id.menu_addedit_delete) {
-            if (edit) {instructorViewModel.delete(instructor);}
+            if (edit) { instructorViewModel.delete(instructor); }
             getActivity().finish();
             return true;
         }
@@ -152,10 +152,11 @@ public class AddEditInstructorFragment extends Fragment {
         String newEmail = this.email.getText().toString();
         if (!edit) {
             this.instructor = new Instructor(newName,newPhone,newEmail);
+        } else {
+            this.instructor.setName(newName);
+            this.instructor.setPhone(newPhone);
+            this.instructor.setEmail(newEmail);
         }
-        this.instructor.setName(newName);
-        this.instructor.setPhone(newPhone);
-        this.instructor.setEmail(newEmail);
     }
 
     private void nextScreen() {

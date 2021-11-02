@@ -1,6 +1,7 @@
 package com.mySchool.mobiledev_c196_pa.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -8,7 +9,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
-import com.mySchool.mobiledev_c196_pa.data.entities.relationships.TermWithCourses;
 import com.mySchool.mobiledev_c196_pa.data.repository.TermRepo;
 
 import java.util.List;
@@ -22,11 +22,18 @@ public class TermViewModel extends AndroidViewModel {
         super(application);
         repo = new TermRepo(application);
         allTerms = repo.getAllTerms();
+        selectedTerm = new MutableLiveData<>();
     }
 
-    public void insert(Term term) {repo.insert(term);}
+    public void insert(Term term) {
+        Log.i("TermVM Insert",term.getTitle()+term.getStart()+term.getEnd());
+        repo.insert(term);
+    }
 
-    public void update(Term term) {repo.update(term);}
+    public void update(Term term) {
+        Log.i("TermVM Update",term.getTitle()+term.getStart()+term.getEnd());
+        repo.update(term);
+    }
 
     public void delete(Term term) {repo.delete(term);}
 

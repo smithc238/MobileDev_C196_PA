@@ -65,10 +65,10 @@ public class DetailedInstructorFragment extends Fragment {
         setEditTextViewOnly();
         instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
         instructorViewModel.getInstructorById(this.id).observe(getViewLifecycleOwner(), instructors -> {
-                if (!instructors.isEmpty()) {
+            if (!instructors.isEmpty()) {
                     instructorViewModel.setInstructor(instructors.get(0));
                     populateFields(instructors.get(0));
-                }
+            }
         });
         return v;
     }

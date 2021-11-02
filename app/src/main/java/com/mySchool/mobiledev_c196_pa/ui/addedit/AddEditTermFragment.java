@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.CourseListAdapter;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
@@ -33,13 +34,14 @@ import java.time.ZonedDateTime;
 public class AddEditTermFragment extends Fragment {
     private static final String EDIT_TERM_ID = "id";
     private boolean edit = false;
-    private long id = -1;
+    private long id;
     private TermViewModel termViewModel;
     private CourseViewModel courseViewModel;
     private EditText title;
     private EditText start;
     private EditText end;
     private TextView noCourses;
+    private FloatingActionButton addButton;
     private Term term;
 
     public AddEditTermFragment() {
@@ -83,6 +85,7 @@ public class AddEditTermFragment extends Fragment {
         start = v.findViewById(R.id.term_start);
         end = v.findViewById(R.id.term_end);
         noCourses = v.findViewById(R.id.term_noCourses);
+        addButton = v.findViewById(R.id.term_floatingActionButton);
 
         RecyclerView recyclerView = v.findViewById(R.id.term_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -91,21 +94,21 @@ public class AddEditTermFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         if (edit) {
-            termViewModel = new ViewModelProvider(this).get(TermViewModel.class);
-            termViewModel.getTermById(id).observe(getViewLifecycleOwner(), terms -> {
-                if (terms != null) {
-                    title.setText(terms.get(0).getTitle());
-                    start.setText(DateTimeConv.dateToStringLocal(terms.get(0).getStart()));
-                    end.setText(DateTimeConv.dateToStringLocal(terms.get(0).getEnd()));
-                    DateFormFiller.dateOnClickDatePicker(start,terms.get(0).getStart());
-                    DateFormFiller.dateOnClickDatePicker(end,terms.get(0).getEnd());
-                    this.term = terms.get(0);
+            termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
+            termViewModel.getTerm().observe(getViewLifecycleOwner(), term -> {
+                if (term != null) {
+                    title.setText(term.getTitle());
+                    start.setText(DateTimeConv.dateToStringLocal(term.getStart()));
+                    end.setText(DateTimeConv.dateToStringLocal(term.getEnd()));
+                    DateFormFiller.dateOnClickDatePicker(start,term.getStart());
+                    DateFormFiller.dateOnClickDatePicker(end,term.getEnd());
                 }
             });
-            courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
+            this.term = termViewModel.getTerm().getValue();
+            courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
             courseViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
-                adapter.setCourses(courses);
                 if (!courses.isEmpty()) {
+                    adapter.setCourses(courses);
                     noCourses.setVisibility(View.GONE);
                 }
             });
@@ -127,14 +130,17 @@ public class AddEditTermFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.menu_addedit_save) {
             //Update or Insert term if valid and has a course.
-            if (formValidation()){
+            //TODO: add back must have course validation for saves.
+            if (formValidation()) {
 //                    && noCourses.getVisibility() == View.GONE) {
                 buildTerm();
                 if (edit) {
-                    termViewModel.update(this.term);
+                    Log.i("EditTerm",this.term.getId()+this.term.getTitle()+this.term.getStart()+this.term.getEnd());
+                    termViewModel.update(term);
                 } else {
+                    //TODO: Fix Term Insert Bug.
                     Log.i("AddTerm",this.term.getId()+this.term.getTitle()+this.term.getStart()+this.term.getEnd());
-                    termViewModel.insert(this.term);
+                    termViewModel.insert(term);
                 }
                 nextScreen();
                 return true;
@@ -144,12 +150,11 @@ public class AddEditTermFragment extends Fragment {
             if (noCourses.getVisibility() == View.GONE) {
                 AlertDialog alert = new AlertDialog.Builder(getActivity())
                         .setMessage(R.string.remove_courses)
-                        .setPositiveButton(R.string.ok, (dialog, which) -> {
-                            dialog.dismiss();
-                        }).create();
+                        .setPositiveButton(R.string.ok,
+                                (dialog, which) -> dialog.dismiss()).create();
                 alert.show();
             } else {
-                if (edit) { termViewModel.delete(this.term); }
+                if (edit) { termViewModel.delete(term); }
                 getActivity().finish();
             }
             return true;
