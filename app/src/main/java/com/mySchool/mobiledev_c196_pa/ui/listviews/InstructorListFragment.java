@@ -5,8 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentOnAttachListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,8 +18,6 @@ import android.view.ViewGroup;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.InstructorsListAdapter;
-import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
-import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditInstructorFragment;
 import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailActivity;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
@@ -61,8 +57,8 @@ public class InstructorListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_instructor_list, container, false);
-        RecyclerView recyclerView = v.findViewById(R.id.instructor_list_recycler_view);
+        View v = inflater.inflate(R.layout.fragment_list_view, container, false);
+        RecyclerView recyclerView = v.findViewById(R.id.list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         InstructorsListAdapter adapter = new InstructorsListAdapter(v.getContext());
         recyclerView.setAdapter(adapter);
@@ -75,7 +71,7 @@ public class InstructorListFragment extends Fragment {
 
         adapter.setOnInstructorClickListener(instructor -> {
             Intent intent = DetailActivity.intentLoader(
-                    getActivity(), 4, instructor.getName(), instructor.getId());
+                    getActivity(), 4,  instructor.getId());
             getActivity().startActivity(intent);
         });
         return v;
@@ -91,8 +87,7 @@ public class InstructorListFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.list_view_add) {
-            Intent intent = DetailActivity.intentLoader(getActivity(),
-                    -4,"new",-4);
+            Intent intent = DetailActivity.intentLoader(getActivity(), -4,-4);
             getActivity().startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

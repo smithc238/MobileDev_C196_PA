@@ -3,111 +3,116 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.addedit.AddEditTermFragment">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/addEdit_term_title"
+            android:id="@+id/term_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:ems="10"
+            android:ems="13"
             android:hint="@string/term_title"
             android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/addEdit_term_start_header"
+            android:id="@+id/term_start_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/start_date"
-            app:layout_constraintEnd_toStartOf="@+id/addEdit_term_guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addEdit_term_title" />
+            app:layout_constraintEnd_toEndOf="@+id/term_start"
+            app:layout_constraintStart_toStartOf="@+id/term_start"
+            app:layout_constraintTop_toBottomOf="@+id/term_title" />
 
         <EditText
-            android:id="@+id/addEdit_term_startDate"
-            android:layout_width="0dp"
+            android:id="@+id/term_start"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
             android:cursorVisible="false"
-            android:ems="10"
+            android:ems="6"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="date"
+            android:minHeight="48dp"
             android:textAlignment="center"
-            app:layout_constraintEnd_toStartOf="@+id/addEdit_term_guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addEdit_term_start_header" />
+            app:layout_constraintTop_toBottomOf="@+id/term_start_header"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
-            android:id="@+id/addEdit_term_end_header"
+            android:id="@+id/term_end_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/end_date"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/addEdit_term_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/addEdit_term_title" />
+            app:layout_constraintEnd_toEndOf="@+id/term_end"
+            app:layout_constraintStart_toStartOf="@+id/term_end"
+            app:layout_constraintTop_toBottomOf="@+id/term_title" />
 
         <EditText
-            android:id="@+id/addEdit_term_endDate"
-            android:layout_width="0dp"
+            android:id="@+id/term_end"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:clickable="false"
             android:cursorVisible="false"
-            android:ems="10"
+            android:ems="6"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:inputType="date"
+            android:minHeight="48dp"
             android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/addEdit_term_startDate"
-            app:layout_constraintTop_toBottomOf="@+id/addEdit_term_end_header" />
+            app:layout_constraintStart_toEndOf="@+id/term_start"
+            app:layout_constraintTop_toBottomOf="@+id/term_end_header"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
-            android:id="@+id/addEdit_term_course_header"
+            android:id="@+id/term_course_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/courses"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addEdit_term_startDate" />
+            app:layout_constraintTop_toBottomOf="@+id/term_start" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/addEdit_term_recycler_view"
+            android:id="@+id/term_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/addEdit_term_course_header"
-            tools:listitem="@layout/course_item" />
+            app:layout_constraintTop_toBottomOf="@+id/term_course_header"
+            tools:listitem="@layout/item_course" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addEdit_term_floatingActionButton"
+            android:id="@+id/term_floatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:contentDescription="@string/add_course"
             android:src="@drawable/ic_add"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addEdit_term_startDate" />
+            app:layout_constraintTop_toBottomOf="@+id/term_start" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/addEdit_term_guideline"
+            android:id="@+id/term_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".5"
             tools:layout_constraintGuide_percent=".5" />
 
-                <TextView
-            android:id="@+id/addEdit_term_noCourses"
+        <TextView
+            android:id="@+id/term_noCourses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -115,7 +120,7 @@
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addEdit_term_course_header" />
+            app:layout_constraintTop_toBottomOf="@+id/term_course_header" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

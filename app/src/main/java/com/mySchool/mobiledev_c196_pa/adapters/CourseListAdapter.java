@@ -17,18 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.CourseHolder> {
+    private OnCourseClickListener listener;
     private List<Course> courses = new ArrayList<>();
-    private final Context context;
 
     public CourseListAdapter(Context context) {
-        this.context = context;
     }
 
     @NonNull
     @Override
     public CourseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.course_item,parent,false);
+                .inflate(R.layout.item_course,parent,false);
         return new CourseHolder(itemView);
     }
 
@@ -69,11 +68,26 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Co
             textViewStatus = itemView.findViewById(R.id.course_item_status);
             textViewAssessment = itemView.findViewById(R.id.course_item_assessment_header);
             textViewNote = itemView.findViewById(R.id.course_item_note_body);
+
+            itemView.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION) {
+                    listener.onCourseClick(courses.get(position));
+                }
+            });
         }
     }
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
         notifyDataSetChanged();
+    }
+
+    public interface OnCourseClickListener {
+        void onCourseClick(Course course);
+    }
+
+    public void setOnCourseClickListener(OnCourseClickListener listener) {
+        this.listener = listener;
     }
 }

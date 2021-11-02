@@ -11,6 +11,6 @@
         android:id="@+id/menu_addedit_delete"
         android:icon="@drawable/ic_delete_forever"
         android:title="@string/delete_item"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>

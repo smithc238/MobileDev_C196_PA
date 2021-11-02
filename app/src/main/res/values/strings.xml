@@ -32,4 +32,6 @@
     <string name="save_item">Save</string>
     <string name="edit_item">Edit</string>
     <string name="delete_item">Delete</string>
+    <string name="ok">OK</string>
+    <string name="remove_courses">Please remove course(s) to delete Term.</string>
 </resources>

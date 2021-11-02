@@ -18,17 +18,15 @@ import java.util.List;
 public class InstructorsListAdapter extends RecyclerView.Adapter<InstructorsListAdapter.InstructorHolder> {
     private OnInstructorClickListener listener;
     private List<Instructor> instructors = new ArrayList<>();
-    private final Context context;
 
     public InstructorsListAdapter(Context context) {
-        this.context = context;
     }
 
     @NonNull
     @Override
     public InstructorHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.instructor_item,parent,false);
+                .inflate(R.layout.item_instructor,parent,false);
         return new InstructorHolder(itemView);
     }
 

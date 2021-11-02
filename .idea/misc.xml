@@ -19,10 +19,12 @@
         <entry key="app/src/main/res/layout/fragment_add_edit_term.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_detailed_instructor.xml" value="0.35435897435897434" />
         <entry key="app/src/main/res/layout/fragment_detailed_term.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/fragment_instructor.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_instructor_list.xml" value="0.36923076923076925" />
         <entry key="app/src/main/res/layout/fragment_item.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_item_list.xml" value="0.35989583333333336" />
         <entry key="app/src/main/res/layout/fragment_my_terms_list.xml" value="0.23596014492753623" />
+        <entry key="app/src/main/res/layout/fragment_term.xml" value="0.36923076923076925" />
         <entry key="app/src/main/res/layout/instructor_item.xml" value="0.36923076923076925" />
         <entry key="app/src/main/res/layout/term_item.xml" value="0.375" />
         <entry key="app/src/main/res/menu/add_edit_menu.xml" value="0.16944444444444445" />

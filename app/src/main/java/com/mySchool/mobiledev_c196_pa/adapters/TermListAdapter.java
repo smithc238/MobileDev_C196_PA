@@ -1,7 +1,6 @@
 package com.mySchool.mobiledev_c196_pa.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
-import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailActivity;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 
 import java.util.ArrayList;
@@ -25,17 +23,15 @@ import java.util.List;
 public class TermListAdapter extends RecyclerView.Adapter<TermListAdapter.TermHolder> {
     private OnTermClickListener listener;
     private List<Term> terms = new ArrayList<>();
-    private final Context context;
 
     public TermListAdapter(Context context) {
-        this.context = context;
     }
 
     @NonNull
     @Override
     public TermHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.term_item,parent,false);
+                .inflate(R.layout.item_term,parent,false);
         return new TermHolder(itemView);
     }
 

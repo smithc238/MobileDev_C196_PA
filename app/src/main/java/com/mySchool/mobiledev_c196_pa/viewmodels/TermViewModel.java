@@ -1,22 +1,22 @@
 package com.mySchool.mobiledev_c196_pa.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
+import com.mySchool.mobiledev_c196_pa.data.entities.relationships.TermWithCourses;
 import com.mySchool.mobiledev_c196_pa.data.repository.TermRepo;
 
 import java.util.List;
-import java.util.Objects;
 
 public class TermViewModel extends AndroidViewModel {
     private TermRepo repo;
     private LiveData<List<Term>> allTerms;
-    private LiveData<List<Term>> term;
+    private MutableLiveData<Term> selectedTerm;
 
     public TermViewModel(@NonNull Application application) {
         super(application);
@@ -32,10 +32,17 @@ public class TermViewModel extends AndroidViewModel {
 
     public void deleteAllTerms() {repo.deleteAllTerms();}
 
-    public LiveData<List<Term>> getTerm(long id) {
-        term = repo.getTerm(id);
-        return term;
+    public LiveData<List<Term>> getTermById(long id) {
+        return repo.getTermById(id);
     }
 
     public LiveData<List<Term>> getAllTerms() {return allTerms;}
+
+    public LiveData<Term> getTerm() {
+        return this.selectedTerm;
+    }
+
+    public void setTerm(Term term) {
+        this.selectedTerm.setValue(term);
+    }
 }

@@ -14,7 +14,6 @@ import java.util.List;
 public class CourseViewModel extends AndroidViewModel {
     private CourseRepo repo;
     private LiveData<List<Course>> allCourses;
-    private LiveData<List<Course>> associatedCourses;
 
     public CourseViewModel(@NonNull Application application) {
         super(application);
@@ -30,9 +29,12 @@ public class CourseViewModel extends AndroidViewModel {
 
     public void deleteAllCourses(Course course) {repo.deleteAllCourses();}
 
+    public LiveData<List<Course>> getCourseById(long id) {
+        return repo.getCourseById(id);
+    }
+
     public LiveData<List<Course>> getAssociatedCourses(long id) {
-        associatedCourses = repo.getAssociatedCourses(id);
-        return associatedCourses;
+        return repo.getAssociatedCourses(id);
     }
 
     public LiveData<List<Course>> getAllCourses() {return allCourses;}

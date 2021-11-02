@@ -16,6 +16,7 @@ import android.widget.EditText;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
+import com.mySchool.mobiledev_c196_pa.utilities.FormValidators;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
 /**
@@ -41,7 +42,7 @@ public class AddEditInstructorFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param id Instructor ID.
+     * @param id Instructor ID > 0 for edit and < 0 for add.
      * @return A new instance of fragment AddEditInstructorFragment.
      */
     public static AddEditInstructorFragment newInstance(long id) {
@@ -83,11 +84,11 @@ public class AddEditInstructorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_detailed_instructor, container, false);
+        View v = inflater.inflate(R.layout.fragment_instructor, container, false);
         instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
-        name = v.findViewById(R.id.detailed_instructor_name);
-        phone = v.findViewById(R.id.detailed_instructor_phone);
-        email = v.findViewById(R.id.detailed_instructor_email);
+        name = v.findViewById(R.id.instructor_name);
+        phone = v.findViewById(R.id.instructor_phone);
+        email = v.findViewById(R.id.instructor_email);
         if (edit) {
             instructorViewModel.getInstructor().observe(getViewLifecycleOwner(), instructor -> {
                 if (instructor != null) {
@@ -111,9 +112,7 @@ public class AddEditInstructorFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_addedit_save) {
-           if (nameValidation(name)
-           && phoneValidation(phone)
-           && emailValidation(email)) {
+           if (formValidation()) {
                buildInstructor();
                if (edit) {
                    instructorViewModel.update(instructor);
@@ -125,47 +124,38 @@ public class AddEditInstructorFragment extends Fragment {
            }
         }
         if (id == R.id.menu_addedit_delete) {
-            instructorViewModel.delete(instructor);
+            if (edit) {instructorViewModel.delete(instructor);}
             getActivity().finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean nameValidation(EditText editText) {
-        String name = editText.getText().toString().trim();
-        if (!name.isEmpty()) {
-            return true;
+    private boolean formValidation() {
+        if (!FormValidators.nameValidation(name)) {
+            name.setError("Please enter a name");
         }
-        editText.setError("Please enter a name");
-        return false;
-    }
-
-    private boolean phoneValidation(EditText editText) {
-       String phone = editText.getText().toString().trim();
-       if (phone.length() < 10) {
-           editText.setError("Please enter a valid phone number.");
-           return false;
-       }
-       return true;
-    }
-
-    private boolean emailValidation(EditText editText) {
-        String email = editText.getText().toString().trim();
-        if (!email.isEmpty()) {
-            return true;
+        if (!FormValidators.phoneValidation(phone)) {
+            phone.setError("Please enter a valid phone number.");
         }
-        editText.setError("Please enter an email.");
-        return false;
+        if (!FormValidators.emailValidation(email)) {
+            email.setError("Please enter an email.");
+        }
+       return FormValidators.nameValidation(name)
+               && FormValidators.phoneValidation(phone)
+               && FormValidators.emailValidation(email);
     }
 
     private void buildInstructor() {
+        String newName = this.name.getText().toString();
+        String newPhone = this.phone.getText().toString();
+        String newEmail = this.email.getText().toString();
         if (!edit) {
-            this.instructor = new Instructor("John Smith","111-111-1111","john.smith@myschool.com");
+            this.instructor = new Instructor(newName,newPhone,newEmail);
         }
-        this.instructor.setName(this.name.getText().toString());
-        this.instructor.setPhone(this.phone.getText().toString());
-        this.instructor.setEmail(this.email.getText().toString());
+        this.instructor.setName(newName);
+        this.instructor.setPhone(newPhone);
+        this.instructor.setEmail(newEmail);
     }
 
     private void nextScreen() {

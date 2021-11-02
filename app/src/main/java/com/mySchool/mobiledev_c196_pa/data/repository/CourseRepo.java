@@ -39,6 +39,10 @@ public class CourseRepo {
         dbExecutor.execute(() -> courseDao.deleteAllCourses());
     }
 
+    public LiveData<List<Course>> getCourseById(long id) {
+        return courseDao.getCourseById(id);
+    }
+
     public LiveData<List<Course>> getAssociatedCourses(long id) {
         return courseDao.getAssociatedCourses(id);
     }

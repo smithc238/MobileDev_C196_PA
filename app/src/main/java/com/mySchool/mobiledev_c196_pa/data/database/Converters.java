@@ -2,6 +2,7 @@ package com.mySchool.mobiledev_c196_pa.data.database;
 
 import androidx.room.TypeConverter;
 
+import com.mySchool.mobiledev_c196_pa.data.entities.ExamType;
 import com.mySchool.mobiledev_c196_pa.data.entities.Status;
 
 import java.time.ZonedDateTime;
@@ -29,4 +30,14 @@ public class Converters {
 
     @TypeConverter
     public Status toStatus(int num) {return Status.values()[num];}
+
+    @TypeConverter
+    public int fromExamType(ExamType examType) {
+        return examType.getNum();
+    }
+
+    @TypeConverter
+    public ExamType toExamType(int num) {
+        return ExamType.values()[num];
+    }
 }

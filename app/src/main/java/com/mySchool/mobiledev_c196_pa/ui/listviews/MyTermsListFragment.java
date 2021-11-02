@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.TermListAdapter;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
-import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditTermFragment;
 import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailActivity;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
@@ -40,8 +39,8 @@ public class MyTermsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_my_terms_list, container, false);
-        RecyclerView recyclerView = v.findViewById(R.id.myTerms_recycler_view);
+        View v = inflater.inflate(R.layout.fragment_list_view, container, false);
+        RecyclerView recyclerView = v.findViewById(R.id.list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         TermListAdapter adapter = new TermListAdapter(v.getContext());
@@ -51,13 +50,10 @@ public class MyTermsListFragment extends Fragment {
         termViewModel = new ViewModelProvider(this).get(TermViewModel.class);
         termViewModel.getAllTerms().observe(getViewLifecycleOwner(), adapter::setTerms);
 
-        adapter.setOnTermClickListener(new TermListAdapter.OnTermClickListener() {
-            @Override
-            public void onTermClick(Term term) {
-                Intent intent = DetailActivity.intentLoader(
-                        getActivity(),1,term.getTitle(),term.getId());
-                getActivity().startActivity(intent);
-            }
+        adapter.setOnTermClickListener(term -> {
+            Intent intent = DetailActivity.intentLoader(
+                    getActivity(),1,term.getId());
+            getActivity().startActivity(intent);
         });
         return v;
     }
@@ -72,8 +68,7 @@ public class MyTermsListFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.list_view_add) {
-            Intent intent = DetailActivity.intentLoader(getActivity(),
-                    -1,"Add Term",-1);
+            Intent intent = DetailActivity.intentLoader(getActivity(), -1,-1);
             getActivity().startActivity(intent);
             return true;
         }

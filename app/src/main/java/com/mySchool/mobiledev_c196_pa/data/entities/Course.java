@@ -1,9 +1,12 @@
 package com.mySchool.mobiledev_c196_pa.data.entities;
 
 import static androidx.room.ForeignKey.NO_ACTION;
+import static androidx.room.ForeignKey.SET_DEFAULT;
 import static androidx.room.ForeignKey.SET_NULL;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -14,17 +17,19 @@ import java.time.ZonedDateTime;
 @Entity(tableName = "Courses",
         foreignKeys = @ForeignKey(entity = Term.class,
         parentColumns = "id", childColumns = "termID",
-                onDelete = SET_NULL),indices = @Index("termID"))
+                onDelete = SET_NULL))
 public class Course {
     @PrimaryKey(autoGenerate = true) private long id;
     @NonNull private String title;
-    @NonNull private Status status;
+    private Status status;
     private ZonedDateTime start;
     private ZonedDateTime end;
     private String note;
-    private long termID;
+    @ColumnInfo(defaultValue = "null", index = true)
+    @Nullable
+    private Long termID;
 
-    public Course(@NonNull String title, @NonNull Status status, ZonedDateTime start, ZonedDateTime end, String note, long termID) {
+    public Course(@NonNull String title, Status status, ZonedDateTime start, ZonedDateTime end, String note, @Nullable Long termID) {
         this.title = title;
         this.status = status;
         this.start = start;
@@ -55,7 +60,7 @@ public class Course {
         return status;
     }
 
-    public void setStatus(@NonNull Status status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

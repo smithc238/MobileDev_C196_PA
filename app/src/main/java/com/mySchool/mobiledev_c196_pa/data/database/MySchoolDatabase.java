@@ -51,10 +51,12 @@ public abstract class MySchoolDatabase extends RoomDatabase {
                 INSTANCE.termDao().insert(new Term("Term 1", today, today.plusMonths(1)));
                 INSTANCE.termDao().insert(new Term("Term 2",today.plusMonths(1),today.plusMonths(2)));
                 INSTANCE.termDao().insert(new Term("Term 3",today.plusMonths(2),today.plusMonths(3)));
-                INSTANCE.courseDao().insert(new Course("Course 1", Status.DROPPED,today,today.plusWeeks(1),"course 1 note",1));
-                INSTANCE.courseDao().insert(new Course("Course 2", Status.COMPLETE,today.plusWeeks(1),today.plusWeeks(2),"course 2 note",1));
-                INSTANCE.courseDao().insert(new Course("Course 3", Status.IN_PROGRESS,today.plusWeeks(2),today.plusWeeks(3),"course 3 note",2));
-                INSTANCE.courseDao().insert(new Course("Course 4", Status.PLAN_TO_TAKE,today.plusWeeks(3),today.plusWeeks(4),null,3));
+                INSTANCE.termDao().insert(new Term("Term 4",today.plusMonths(3),today.plusMonths(4)));
+                INSTANCE.courseDao().insert(new Course("Course 1", Status.DROPPED,today,today.plusWeeks(1),"course 1 note", 1L));
+                INSTANCE.courseDao().insert(new Course("Course 2", Status.COMPLETE,today.plusWeeks(1),today.plusWeeks(2),"course 2 note", 1L));
+                INSTANCE.courseDao().insert(new Course("Course 3", Status.IN_PROGRESS,today.plusWeeks(2),today.plusWeeks(3),"course 3 note", 2L));
+                INSTANCE.courseDao().insert(new Course("Course 4", Status.PLAN_TO_TAKE,today.plusWeeks(3),today.plusWeeks(4),null, 3L));
+                INSTANCE.courseDao().insert(new Course("Course 5", Status.PLAN_TO_TAKE,today.plusWeeks(4),today.plusWeeks(5),null, null));
                 INSTANCE.instructorDao().insert(new Instructor("John Doe","578-354-2256","john.doe@mySchool.com"));
                 INSTANCE.instructorDao().insert(new Instructor("Jane Doe","578-354-8843","jane.doe@mySchool.com"));
                 INSTANCE.instructorDao().insert(new Instructor("Joe Snuffy","578-354-1775","joe.snuffy@mySchool.com"));

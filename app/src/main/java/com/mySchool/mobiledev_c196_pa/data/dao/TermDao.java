@@ -5,9 +5,11 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
+import com.mySchool.mobiledev_c196_pa.data.entities.relationships.TermWithCourses;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public interface TermDao {
     void deleteAllTerms();
 
     @Query("SELECT * FROM Terms WHERE id = :id")
-    LiveData<List<Term>> getTerm(long id);
+    LiveData<List<Term>> getTermById(long id);
 
     @Query("SELECT * FROM Terms")
     LiveData<List<Term>> getAllTerms();

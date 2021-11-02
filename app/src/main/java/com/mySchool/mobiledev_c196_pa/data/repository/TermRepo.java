@@ -1,15 +1,14 @@
 package com.mySchool.mobiledev_c196_pa.data.repository;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.dao.TermDao;
 import com.mySchool.mobiledev_c196_pa.data.database.MySchoolDatabase;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
+import com.mySchool.mobiledev_c196_pa.data.entities.relationships.TermWithCourses;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -47,8 +46,8 @@ public class TermRepo {
         });
     }
 
-    public LiveData<List<Term>> getTerm(long id) {
-        return termDao.getTerm(id);
+    public LiveData<List<Term>> getTermById(long id) {
+        return termDao.getTermById(id);
     }
 
     public LiveData<List<Term>> getAllTerms() {

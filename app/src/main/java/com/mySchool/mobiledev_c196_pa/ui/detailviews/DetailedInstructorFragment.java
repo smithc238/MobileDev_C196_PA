@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -19,8 +18,6 @@ import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditInstructorFragment;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
-
-import java.util.List;
 
 public class DetailedInstructorFragment extends Fragment {
     private static final String ID = "id";
@@ -61,10 +58,10 @@ public class DetailedInstructorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_detailed_instructor, container, false);
-        name = v.findViewById(R.id.detailed_instructor_name);
-        phone = v.findViewById(R.id.detailed_instructor_phone);
-        email = v.findViewById(R.id.detailed_instructor_email);
+        View v = inflater.inflate(R.layout.fragment_instructor, container, false);
+        name = v.findViewById(R.id.instructor_name);
+        phone = v.findViewById(R.id.instructor_phone);
+        email = v.findViewById(R.id.instructor_email);
         setEditTextViewOnly();
         instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
         instructorViewModel.getInstructorById(this.id).observe(getViewLifecycleOwner(), instructors -> {
@@ -88,11 +85,10 @@ public class DetailedInstructorFragment extends Fragment {
         if (id == R.id.menu_detail_edit) {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.detail_view_host,
-                            AddEditInstructorFragment.newInstance(id))
+                            AddEditInstructorFragment.newInstance(this.id))
                     .addToBackStack("detail")
                     .commit();
         } else if (id == R.id.menu_detail_delete) {
-            instructorViewModel.getInstructorById(this.id).removeObservers(getViewLifecycleOwner());
             instructorViewModel.delete(instructorViewModel.getInstructor().getValue());
             getActivity().finish();
         }
@@ -104,14 +100,17 @@ public class DetailedInstructorFragment extends Fragment {
         name.setCursorVisible(false);
         name.setFocusable(false);
         name.setFocusableInTouchMode(false);
+        name.setBackground(null);
         phone.setClickable(false);
         phone.setCursorVisible(false);
         phone.setFocusable(false);
         phone.setFocusableInTouchMode(false);
+        phone.setBackground(null);
         email.setClickable(false);
         email.setCursorVisible(false);
         email.setFocusable(false);
         email.setFocusableInTouchMode(false);
+        email.setBackground(null);
     }
 
     private void populateFields(Instructor instructor) {
