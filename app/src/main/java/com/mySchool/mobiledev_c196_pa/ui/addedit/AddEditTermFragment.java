@@ -93,8 +93,10 @@ public class AddEditTermFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
 
+        termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
+        courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
+
         if (edit) {
-            termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
             termViewModel.getTerm().observe(getViewLifecycleOwner(), term -> {
                 if (term != null) {
                     title.setText(term.getTitle());
@@ -105,7 +107,6 @@ public class AddEditTermFragment extends Fragment {
                 }
             });
             this.term = termViewModel.getTerm().getValue();
-            courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
             courseViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
                 if (!courses.isEmpty()) {
                     adapter.setCourses(courses);
@@ -135,14 +136,9 @@ public class AddEditTermFragment extends Fragment {
 //                    && noCourses.getVisibility() == View.GONE) {
                 buildTerm();
                 if (edit) {
-                    Log.i("EditTerm",this.term.getTitle()+this.term.getStart()+this.term.getEnd());
-                    termViewModel.update(term);
+                    termViewModel.update(this.term);
                 } else {
-                    //TODO: Fix Term Insert Bug.
-                    Log.i("AddTerm",this.term.getTitle()+this.term.getStart()+this.term.getEnd());
-                    termViewModel.insert(term);
-                    //This doesn't work same error. However, it works in VM and Repo.
-//                    termViewModel.insert(new Term("Test 11",ZonedDateTime.now(),ZonedDateTime.now().plusMonths(3)));
+                    termViewModel.insert(this.term);
                 }
                 nextScreen();
                 return true;

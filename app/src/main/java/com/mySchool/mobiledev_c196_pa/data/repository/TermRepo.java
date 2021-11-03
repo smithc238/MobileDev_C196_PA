@@ -24,14 +24,12 @@ public class TermRepo {
 
     public void insert(Term term) {
        dbExecutor.execute(() -> {
-           Log.i("TermRepo Insert",term.getTitle()+term.getStart()+term.getEnd());
            termDao.insert(term);
        });
     }
 
     public void update(Term term) {
         dbExecutor.execute(()-> {
-            Log.i("TermRepo Update",term.getTitle()+term.getStart()+term.getEnd());
             termDao.update(term);
         });
     }

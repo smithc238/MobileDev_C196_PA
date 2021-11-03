@@ -26,12 +26,10 @@ public class TermViewModel extends AndroidViewModel {
     }
 
     public void insert(Term term) {
-        Log.i("TermVM Insert",term.getTitle()+term.getStart()+term.getEnd());
         repo.insert(term);
     }
 
     public void update(Term term) {
-        Log.i("TermVM Update",term.getTitle()+term.getStart()+term.getEnd());
         repo.update(term);
     }
 

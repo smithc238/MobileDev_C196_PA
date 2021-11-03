@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.TermListAdapter;
-import com.mySchool.mobiledev_c196_pa.data.entities.Term;
 import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailActivity;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
