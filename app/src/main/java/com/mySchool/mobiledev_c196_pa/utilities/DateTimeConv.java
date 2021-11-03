@@ -14,6 +14,6 @@ public class DateTimeConv {
     }
 
     public static ZonedDateTime stringToDateLocalWithoutTime(String text) {
-        return LocalDate.parse(text,LOCAL_DATE).atStartOfDay(ZoneId.systemDefault());
+        return LocalDate.parse(text,LOCAL_DATE).atTime(8,0,0,0).atZone(ZoneId.systemDefault());
     }
 }
