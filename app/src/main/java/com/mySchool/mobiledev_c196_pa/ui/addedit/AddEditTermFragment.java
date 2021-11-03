@@ -135,12 +135,14 @@ public class AddEditTermFragment extends Fragment {
 //                    && noCourses.getVisibility() == View.GONE) {
                 buildTerm();
                 if (edit) {
-                    Log.i("EditTerm",this.term.getId()+this.term.getTitle()+this.term.getStart()+this.term.getEnd());
+                    Log.i("EditTerm",this.term.getTitle()+this.term.getStart()+this.term.getEnd());
                     termViewModel.update(term);
                 } else {
                     //TODO: Fix Term Insert Bug.
-                    Log.i("AddTerm",this.term.getId()+this.term.getTitle()+this.term.getStart()+this.term.getEnd());
+                    Log.i("AddTerm",this.term.getTitle()+this.term.getStart()+this.term.getEnd());
                     termViewModel.insert(term);
+                    //This doesn't work same error. However, it works in VM and Repo.
+//                    termViewModel.insert(new Term("Test 11",ZonedDateTime.now(),ZonedDateTime.now().plusMonths(3)));
                 }
                 nextScreen();
                 return true;
