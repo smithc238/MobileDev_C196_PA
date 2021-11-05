@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/course_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/course_title"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/course_start_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/start_date"
+            app:layout_constraintEnd_toEndOf="@+id/course_start"
+            app:layout_constraintStart_toStartOf="@+id/course_start"
+            app:layout_constraintTop_toBottomOf="@+id/course_title" />
+
+        <EditText
+            android:id="@+id/course_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:ems="6"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:importantForAutofill="no"
+            android:inputType="date"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="@+id/course_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_start_header"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/course_end_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/end_date"
+            app:layout_constraintEnd_toEndOf="@+id/course_end"
+            app:layout_constraintStart_toStartOf="@+id/course_end"
+            app:layout_constraintTop_toBottomOf="@+id/course_start" />
+
+        <EditText
+            android:id="@+id/course_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:ems="6"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:importantForAutofill="no"
+            android:inputType="date"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="@+id/course_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_end_header"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <RadioGroup
+            android:id="@+id/course_status_radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/course_title"
+            app:layout_constraintTop_toTopOf="@+id/course_title">
+
+            <TextView
+                android:id="@+id/course_status_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/status" />
+
+            <RadioButton
+                android:id="@+id/course_status_planToTake_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/plan_to_take" />
+
+            <RadioButton
+                android:id="@+id/course_status_inProgress_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/in_progress" />
+
+            <RadioButton
+                android:id="@+id/course_status_complete_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/complete" />
+
+            <RadioButton
+                android:id="@+id/course_status_dropped_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dropped" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/course_instructor_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/instructor_s"
+            app:layout_constraintEnd_toEndOf="@+id/course_instructor_recyclerView"
+            app:layout_constraintStart_toStartOf="@+id/course_instructor_recyclerView"
+            app:layout_constraintTop_toBottomOf="@+id/course_status_radio_group" />
+
+        <Button
+            android:id="@+id/course_addInstructor_button"
+            style="@style/Theme.MySchool.Buttons"
+            android:text="@string/add_instructor"
+            app:layout_constraintBottom_toBottomOf="@+id/course_instructor_header"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/course_instructor_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_instructor_header" />
+
+        <TextView
+            android:id="@+id/course_assessment_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/assessment_s"
+            app:layout_constraintEnd_toEndOf="@+id/course_assessment_recyclerView"
+            app:layout_constraintStart_toStartOf="@+id/course_assessment_recyclerView"
+            app:layout_constraintTop_toBottomOf="@+id/course_instructor_recyclerView" />
+
+        <Button
+            android:id="@+id/course_addAssessment_button"
+            style="@style/Theme.MySchool.Buttons"
+            android:text="@string/add_assessment"
+            app:layout_constraintBottom_toBottomOf="@+id/course_assessment_header"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/course_assessment_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_assessment_header" />
+
+        <TextView
+            android:id="@+id/course_note_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/note"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_assessment_recyclerView" />
+
+        <EditText
+            android:id="@+id/course_note"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/optional_note"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_note_header" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

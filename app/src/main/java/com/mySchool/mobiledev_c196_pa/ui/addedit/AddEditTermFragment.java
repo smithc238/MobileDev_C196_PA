@@ -9,20 +9,21 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.CourseListAdapter;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
+import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailedCourseFragment;
 import com.mySchool.mobiledev_c196_pa.utilities.DateFormFiller;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.utilities.FormValidators;
@@ -36,21 +37,18 @@ public class AddEditTermFragment extends Fragment {
     private boolean edit = false;
     private long id;
     private TermViewModel termViewModel;
-    private CourseViewModel courseViewModel;
     private EditText title;
     private EditText start;
     private EditText end;
     private TextView noCourses;
-    private FloatingActionButton addButton;
+    private Button addButton;
     private Term term;
 
     public AddEditTermFragment() {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
+     * Use this factory method to create a new instance of this fragment using the provided parameters.
      * @param termID term ID > 0 for edit, < 0 is add.
      * @return A new instance of fragment AddEditTermFragment.
      */
@@ -85,7 +83,9 @@ public class AddEditTermFragment extends Fragment {
         start = v.findViewById(R.id.term_start);
         end = v.findViewById(R.id.term_end);
         noCourses = v.findViewById(R.id.term_noCourses);
-        addButton = v.findViewById(R.id.term_floatingActionButton);
+        addButton = v.findViewById(R.id.term_addCourse_button);
+        prepareFields();
+        setAddCourseListener();
 
         RecyclerView recyclerView = v.findViewById(R.id.term_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -94,8 +94,6 @@ public class AddEditTermFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
-        courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
-
         if (edit) {
             termViewModel.getTerm().observe(getViewLifecycleOwner(), term -> {
                 if (term != null) {
@@ -107,7 +105,7 @@ public class AddEditTermFragment extends Fragment {
                 }
             });
             this.term = termViewModel.getTerm().getValue();
-            courseViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
+            termViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
                 if (!courses.isEmpty()) {
                     adapter.setCourses(courses);
                     noCourses.setVisibility(View.GONE);
@@ -117,7 +115,27 @@ public class AddEditTermFragment extends Fragment {
             DateFormFiller.dateOnClickDatePicker(start,null);
             DateFormFiller.dateOnClickDatePicker(end,null);
         }
+        adapter.setOnCourseClickListener(course -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getId(),this.id))
+                    .addToBackStack("AddEditTerm")
+                    .commit();
+        });
         return v;
+    }
+
+    private void prepareFields() {
+        start.setFocusable(true);
+        start.setFocusableInTouchMode(true);
+        end.setFocusable(true);
+        end.setFocusableInTouchMode(true);
+    }
+
+    private void setAddCourseListener() {
+        addButton.setOnClickListener(v -> {
+            //TODO: set listener to add course button.
+            Toast.makeText(getActivity(), "Add course clicked.", Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -131,9 +149,7 @@ public class AddEditTermFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.menu_addedit_save) {
             //Update or Insert term if valid and has a course.
-            //TODO: add back must have course validation for saves.
             if (formValidation()) {
-//                    && noCourses.getVisibility() == View.GONE) {
                 buildTerm();
                 if (edit) {
                     termViewModel.update(this.term);
@@ -147,9 +163,15 @@ public class AddEditTermFragment extends Fragment {
             // If Term has courses display alert, else delete.
             if (noCourses.getVisibility() == View.GONE) {
                 AlertDialog alert = new AlertDialog.Builder(getActivity())
-                        .setMessage(R.string.remove_courses)
-                        .setPositiveButton(R.string.ok,
-                                (dialog, which) -> dialog.dismiss()).create();
+                        .setMessage(R.string.delete_term_and_courses)
+                        .setNegativeButton(R.string.cancel,(dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .setPositiveButton(R.string.delete, (dialog, which) -> {
+                            termViewModel.delete(term);
+                            getActivity().finish();
+                        })
+                        .create();
                 alert.show();
             } else {
                 if (edit) { termViewModel.delete(term); }
@@ -160,16 +182,28 @@ public class AddEditTermFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO:Add validations for null date fields
     private boolean formValidation() {
         if (!FormValidators.nameValidation(title)) {
+            title.requestFocus();
             title.setError("Please enter a title.");
         }
+        if (!FormValidators.startDateValidation(start)) {
+            start.requestFocus();
+            start.setError("Please select a start date.");
+        }
         if (!FormValidators.endDateValidation(start, end)) {
-            end.setError("Please select a date after Start date.");
+            end.requestFocus();
+            end.setError("Please select a valid end date.");
+        }
+        if (noCourses.getVisibility() != View.GONE) {
+            noCourses.requestFocus();
+            noCourses.setBackgroundColor(getResources().getColor(R.color.errorBackground, getActivity().getTheme()));
+            noCourses.setTextColor(getResources().getColor(R.color.errorText, getActivity().getTheme()));
         }
         return FormValidators.nameValidation(title)
-                && FormValidators.endDateValidation(start, end);
+                && FormValidators.startDateValidation(start)
+                && FormValidators.endDateValidation(start, end)
+                && noCourses.getVisibility() == View.GONE;
     }
 
     private void buildTerm() {
@@ -192,4 +226,6 @@ public class AddEditTermFragment extends Fragment {
             getParentFragmentManager().popBackStack();
         }
     }
+
+
 }

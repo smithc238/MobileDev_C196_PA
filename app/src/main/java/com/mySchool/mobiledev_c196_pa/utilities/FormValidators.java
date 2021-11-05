@@ -46,17 +46,27 @@ public abstract class FormValidators {
     }
 
     /**
-     * Determines if End Date is after Start date.
+     * Determine if start is not empty.
+     * @param start Start Date EditText.
+     * @return true if valid, false if empty.
+     */
+    public static boolean startDateValidation(EditText start) {
+        return !start.getText().toString().isEmpty();
+    }
+
+    /**
+     * Determines if End Date is after Start date and if both are not empty.
      * @param start EditText start date.
      * @param end EditText end date.
      * @return true if valid.
      */
     public static boolean endDateValidation(EditText start, EditText end) {
-        ZonedDateTime startDate = DateTimeConv.stringToDateLocalWithoutTime(start.getText().toString());
-        ZonedDateTime endDate = DateTimeConv.stringToDateLocalWithoutTime(end.getText().toString());
-        if (startDate.isBefore(endDate)) {
-            return true;
+        if (start.getText().toString().isEmpty() || end.getText().toString().isEmpty()) {
+            return false;
+        } else {
+            ZonedDateTime startDate = DateTimeConv.stringToDateLocalWithoutTime(start.getText().toString());
+            ZonedDateTime endDate = DateTimeConv.stringToDateLocalWithoutTime(end.getText().toString());
+            return startDate.isBefore(endDate);
         }
-        return false;
     }
 }

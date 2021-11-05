@@ -21,11 +21,11 @@ import com.mySchool.mobiledev_c196_pa.adapters.TermListAdapter;
 import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailActivity;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
-public class MyTermsListFragment extends Fragment {
+public class TermListFragment extends Fragment {
 
     private TermViewModel termViewModel;
 
-    public MyTermsListFragment() {
+    public TermListFragment() {
     }
 
     @Override

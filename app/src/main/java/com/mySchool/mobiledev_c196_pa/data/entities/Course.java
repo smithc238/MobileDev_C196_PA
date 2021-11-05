@@ -1,23 +1,20 @@
 package com.mySchool.mobiledev_c196_pa.data.entities;
 
-import static androidx.room.ForeignKey.NO_ACTION;
-import static androidx.room.ForeignKey.SET_DEFAULT;
-import static androidx.room.ForeignKey.SET_NULL;
+import static androidx.room.ForeignKey.CASCADE;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.time.ZonedDateTime;
 
-@Entity(tableName = "Courses")
-//        foreignKeys = @ForeignKey(entity = Term.class,
-//        parentColumns = "id", childColumns = "termID",
-//                onDelete = SET_NULL))
+@Entity(tableName = "Courses",
+        foreignKeys = @ForeignKey(entity = Term.class,
+        parentColumns = "id", childColumns = "termID",
+                onDelete = CASCADE))
 public class Course {
     @PrimaryKey(autoGenerate = true) private long id;
     @NonNull private String title;

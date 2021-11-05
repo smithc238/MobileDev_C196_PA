@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
 import com.mySchool.mobiledev_c196_pa.data.repository.TermRepo;
 
@@ -49,5 +50,9 @@ public class TermViewModel extends AndroidViewModel {
 
     public void setTerm(Term term) {
         this.selectedTerm.setValue(term);
+    }
+
+    public LiveData<List<Course>> getAssociatedCourses(long id) {
+        return repo.getAssociatedCourses(id);
     }
 }

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 import com.mySchool.mobiledev_c196_pa.data.repository.CourseRepo;
 
@@ -27,15 +28,15 @@ public class CourseViewModel extends AndroidViewModel {
 
     public void delete(Course course) {repo.delete(course);}
 
-    public void deleteAllCourses(Course course) {repo.deleteAllCourses();}
+    public void deleteAllCourses() {repo.deleteAllCourses();}
 
     public LiveData<List<Course>> getCourseById(long id) {
         return repo.getCourseById(id);
     }
 
-    public LiveData<List<Course>> getAssociatedCourses(long id) {
-        return repo.getAssociatedCourses(id);
-    }
-
     public LiveData<List<Course>> getAllCourses() {return allCourses;}
+
+    public LiveData<List<Assessment>> getAssociatedAssessments(long id) {
+        return repo.getAssociatedAssessments(id);
+    }
 }

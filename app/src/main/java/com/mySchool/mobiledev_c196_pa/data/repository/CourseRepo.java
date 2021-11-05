@@ -1,16 +1,15 @@
 package com.mySchool.mobiledev_c196_pa.data.repository;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.dao.CourseDao;
 import com.mySchool.mobiledev_c196_pa.data.database.MySchoolDatabase;
+import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 public class CourseRepo {
@@ -39,15 +38,15 @@ public class CourseRepo {
         dbExecutor.execute(() -> courseDao.deleteAllCourses());
     }
 
+    public LiveData<List<Course>> getAllCourses() {
+        return courseDao.getAllCourses();
+    }
+
     public LiveData<List<Course>> getCourseById(long id) {
         return courseDao.getCourseById(id);
     }
 
-    public LiveData<List<Course>> getAssociatedCourses(long id) {
-        return courseDao.getAssociatedCourses(id);
-    }
-
-    public LiveData<List<Course>> getAllCourses() {
-        return courseDao.getAllCourses();
+    public LiveData<List<Assessment>> getAssociatedAssessments(long id) {
+        return courseDao.getAssociatedAssessments(id);
     }
 }

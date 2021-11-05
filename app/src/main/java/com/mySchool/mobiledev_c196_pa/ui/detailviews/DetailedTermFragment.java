@@ -15,10 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.CourseListAdapter;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditTermFragment;
@@ -30,12 +30,11 @@ public class DetailedTermFragment extends Fragment {
     private static final String TERM_ID = "id";
     private long id;
     private TermViewModel termViewModel;
-    private CourseViewModel courseViewModel;
     private EditText title;
     private EditText start;
     private EditText end;
     private TextView noCourses;
-    private FloatingActionButton addButton;
+    private Button addButton;
 
     public DetailedTermFragment() {
     }
@@ -73,7 +72,7 @@ public class DetailedTermFragment extends Fragment {
         start = v.findViewById(R.id.term_start);
         end = v.findViewById(R.id.term_end);
         noCourses = v.findViewById(R.id.term_noCourses);
-        addButton = v.findViewById(R.id.term_floatingActionButton);
+        addButton = v.findViewById(R.id.term_addCourse_button);
         setReadOnly();
 
         RecyclerView recyclerView = v.findViewById(R.id.term_recycler_view);
@@ -91,14 +90,17 @@ public class DetailedTermFragment extends Fragment {
                 end.setText(DateTimeConv.dateToStringLocal(terms.get(0).getEnd()));
             }
         });
-        courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
-        courseViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
+        termViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
             if (!courses.isEmpty()) {
                 adapter.setCourses(courses);
                 noCourses.setVisibility(View.GONE);
-            } else {
-                noCourses.setVisibility(View.VISIBLE);
             }
+        });
+        adapter.setOnCourseClickListener(course -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getId(),this.id))
+                    .addToBackStack("DetailedTerm")
+                    .commit();
         });
         return v;
     }
@@ -119,17 +121,17 @@ public class DetailedTermFragment extends Fragment {
                     .addToBackStack("detail")
                     .commit();
         } else if (id == R.id.menu_detail_delete) {
-            // If Term has courses display alert, else delete.
-            if (noCourses.getVisibility() == View.GONE) {
-                AlertDialog alert = new AlertDialog.Builder(getActivity())
-                        .setMessage(R.string.remove_courses)
-                        .setPositiveButton(R.string.ok,
-                                (dialog, which) -> dialog.dismiss()).create();
-                alert.show();
-            } else {
-                termViewModel.delete(termViewModel.getTerm().getValue());
-                getActivity().finish();
-            }
+            AlertDialog alert = new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.delete_term_and_courses)
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .setPositiveButton(R.string.delete, (dialog, which) -> {
+                        termViewModel.delete(termViewModel.getTerm().getValue());
+                        getActivity().finish();
+                    })
+                    .create();
+            alert.show();
             return true;
         }
         return super.onOptionsItemSelected(item);

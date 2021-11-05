@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
 
 import java.util.List;
@@ -30,4 +31,7 @@ public interface TermDao {
 
     @Query("SELECT * FROM Terms")
     LiveData<List<Term>> getAllTerms();
+
+    @Query("SELECT * FROM courses WHERE termID = :id")
+    LiveData<List<Course>> getAssociatedCourses(long id);
 }

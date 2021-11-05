@@ -1,7 +1,6 @@
 package com.mySchool.mobiledev_c196_pa.ui.listviews;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -37,7 +36,7 @@ public class ListActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
-                    .add(R.id.list_view_host,new MyTermsListFragment())
+                    .add(R.id.list_view_host,new TermListFragment())
                     .commit();
             navigationView.setCheckedItem(R.id.nav_myTermsList);
         }
@@ -48,7 +47,7 @@ public class ListActivity extends AppCompatActivity implements
         int id = item.getItemId();
         if (id == R.id.nav_myTermsList) {
             fragmentManager.beginTransaction()
-                    .replace(R.id.list_view_host, new MyTermsListFragment())
+                    .replace(R.id.list_view_host, new TermListFragment())
                     .commit();
         } else if (id == R.id.nav_instructorList) {
             fragmentManager.beginTransaction()

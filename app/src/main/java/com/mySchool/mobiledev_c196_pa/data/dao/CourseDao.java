@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 
 import java.util.List;
@@ -31,6 +32,6 @@ public interface CourseDao {
     @Query("SELECT * FROM courses WHERE id = :id")
     LiveData<List<Course>> getCourseById(long id);
 
-    @Query("SELECT * FROM courses WHERE termID = :id")
-    LiveData<List<Course>> getAssociatedCourses(long id);
+    @Query("SELECT * FROM assessments WHERE courseId = :id")
+    LiveData<List<Assessment>> getAssociatedAssessments(long id);
 }

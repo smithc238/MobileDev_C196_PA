@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.dao.TermDao;
 import com.mySchool.mobiledev_c196_pa.data.database.MySchoolDatabase;
+import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
 
 import java.util.List;
@@ -48,5 +49,9 @@ public class TermRepo {
 
     public LiveData<List<Term>> getAllTerms() {
         return termDao.getAllTerms();
+    }
+
+    public LiveData<List<Course>> getAssociatedCourses(long id) {
+        return termDao.getAssociatedCourses(id);
     }
 }
