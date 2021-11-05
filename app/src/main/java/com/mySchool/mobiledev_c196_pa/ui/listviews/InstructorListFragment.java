@@ -71,7 +71,7 @@ public class InstructorListFragment extends Fragment {
 
         adapter.setOnInstructorClickListener(instructor -> {
             Intent intent = DetailActivity.intentLoader(
-                    getActivity(), 4,  instructor.getId());
+                    getActivity(), 4,  instructor.getInstructorID());
             getActivity().startActivity(intent);
         });
         return v;

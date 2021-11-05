@@ -8,6 +8,9 @@ import androidx.lifecycle.LiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
+import com.mySchool.mobiledev_c196_pa.data.entities.CourseWithInstructors;
+import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
+import com.mySchool.mobiledev_c196_pa.data.entities.InstructorsWithCourses;
 import com.mySchool.mobiledev_c196_pa.data.repository.CourseRepo;
 
 import java.util.List;
@@ -35,6 +38,10 @@ public class CourseViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Course>> getAllCourses() {return allCourses;}
+
+    public LiveData<List<Instructor>> getAssociatedInstructors(long id) {
+        return repo.getAssociatedInstructors(id);
+    }
 
     public LiveData<List<Assessment>> getAssociatedAssessments(long id) {
         return repo.getAssociatedAssessments(id);

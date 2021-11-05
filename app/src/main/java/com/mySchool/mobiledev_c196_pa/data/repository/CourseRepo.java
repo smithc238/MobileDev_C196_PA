@@ -5,9 +5,14 @@ import android.app.Application;
 import androidx.lifecycle.LiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.dao.CourseDao;
+import com.mySchool.mobiledev_c196_pa.data.dao.CourseInstructorCrossRefDao;
 import com.mySchool.mobiledev_c196_pa.data.database.MySchoolDatabase;
 import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
+import com.mySchool.mobiledev_c196_pa.data.entities.CourseInstructorCrossRef;
+import com.mySchool.mobiledev_c196_pa.data.entities.CourseWithInstructors;
+import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
+import com.mySchool.mobiledev_c196_pa.data.entities.InstructorsWithCourses;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -44,6 +49,10 @@ public class CourseRepo {
 
     public LiveData<List<Course>> getCourseById(long id) {
         return courseDao.getCourseById(id);
+    }
+
+    public LiveData<List<Instructor>> getAssociatedInstructors(long id) {
+        return courseDao.getAssociatedInstructors(id);
     }
 
     public LiveData<List<Assessment>> getAssociatedAssessments(long id) {

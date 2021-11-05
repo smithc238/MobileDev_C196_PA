@@ -25,7 +25,7 @@ public interface InstructorDao {
     @Query("DELETE FROM instructors")
     void deleteAllInstructors();
 
-    @Query("SELECT * FROM instructors WHERE id = :id")
+    @Query("SELECT * FROM instructors WHERE instructorID = :id")
     LiveData<List<Instructor>> getInstructorById(long id);
 
     @Query("SELECT * FROM instructors")

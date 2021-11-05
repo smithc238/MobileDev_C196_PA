@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
         parentColumns = "id", childColumns = "termID",
                 onDelete = CASCADE))
 public class Course {
-    @PrimaryKey(autoGenerate = true) private long id;
+    @PrimaryKey(autoGenerate = true) private long courseID;
     @NonNull private String title;
     private Status status;
     private ZonedDateTime start;
@@ -35,12 +35,12 @@ public class Course {
         this.termID = termID;
     }
 
-    public long getId() {
-        return id;
+    public long getCourseID() {
+        return courseID;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCourseID(long courseID) {
+        this.courseID = courseID;
     }
 
     @NonNull

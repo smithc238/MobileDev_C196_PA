@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
 import java.time.ZonedDateTime;
 
 @Entity(tableName = "Assessments", foreignKeys = @ForeignKey(
-        entity = Course.class, parentColumns = "id",
+        entity = Course.class, parentColumns = "courseID",
         childColumns = "courseId", onDelete = CASCADE))
 public class Assessment {
     @PrimaryKey(autoGenerate = true) private long id;

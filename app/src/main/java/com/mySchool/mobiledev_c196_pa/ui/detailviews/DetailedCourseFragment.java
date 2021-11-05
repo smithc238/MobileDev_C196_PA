@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -12,15 +13,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.mySchool.mobiledev_c196_pa.R;
+import com.mySchool.mobiledev_c196_pa.adapters.AssessmentListAdapter;
 import com.mySchool.mobiledev_c196_pa.adapters.InstructorsListAdapter;
 import com.mySchool.mobiledev_c196_pa.data.entities.Status;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
-import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,11 +83,14 @@ public class DetailedCourseFragment extends Fragment {
         prepareFields(v);
         RecyclerView instructorRecycler = v.findViewById(R.id.course_instructor_recyclerView);
         RecyclerView assessmentRecycler = v.findViewById(R.id.course_assessment_recyclerView);
+        instructorRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         instructorRecycler.setHasFixedSize(true);
+        assessmentRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         assessmentRecycler.setHasFixedSize(true);
         InstructorsListAdapter iAdapter = new InstructorsListAdapter(v.getContext());
         instructorRecycler.setAdapter(iAdapter);
-
+        AssessmentListAdapter aAdapter = new AssessmentListAdapter(v.getContext());
+        assessmentRecycler.setAdapter(aAdapter);
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
         courseViewModel.getCourseById(id).observe(getViewLifecycleOwner(), course -> {
             if (!course.isEmpty()) {
@@ -102,6 +105,28 @@ public class DetailedCourseFragment extends Fragment {
                     noteHeader.setVisibility(View.GONE);
                 }
             }
+        });
+        courseViewModel.getAssociatedInstructors(id).observe(getViewLifecycleOwner(),instructors -> {
+            if (!instructors.isEmpty()) {
+                iAdapter.setInstructors(instructors);
+            }
+        });
+        courseViewModel.getAssociatedAssessments(id).observe(getViewLifecycleOwner(),assessments -> {
+            if (!assessments.isEmpty()) {
+                aAdapter.setAssessments(assessments);
+            }
+        });
+        iAdapter.setOnInstructorClickListener(instructor -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.detail_view_host,DetailedInstructorFragment.newInstance(instructor.getInstructorID()))
+                    .addToBackStack("DetailedCourse")
+                    .commit();
+        });
+        aAdapter.setOnAssessmentClickListener(assessment -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.detail_view_host,DetailedAssessmentFragment.newInstance(assessment.getId(),this.id))
+                    .addToBackStack("DetailedCourse")
+                    .commit();
         });
         return v;
     }

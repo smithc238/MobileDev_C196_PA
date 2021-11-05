@@ -23,7 +23,6 @@ import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.CourseListAdapter;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditTermFragment;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
-import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
 public class DetailedTermFragment extends Fragment {
@@ -98,7 +97,7 @@ public class DetailedTermFragment extends Fragment {
         });
         adapter.setOnCourseClickListener(course -> {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getId(),this.id))
+                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getCourseID(),this.id))
                     .addToBackStack("DetailedTerm")
                     .commit();
         });

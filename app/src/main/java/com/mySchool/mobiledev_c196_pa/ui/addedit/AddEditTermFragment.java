@@ -27,7 +27,6 @@ import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailedCourseFragment;
 import com.mySchool.mobiledev_c196_pa.utilities.DateFormFiller;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.utilities.FormValidators;
-import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
 import java.time.ZonedDateTime;
@@ -117,7 +116,7 @@ public class AddEditTermFragment extends Fragment {
         }
         adapter.setOnCourseClickListener(course -> {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getId(),this.id))
+                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getCourseID(),this.id))
                     .addToBackStack("AddEditTerm")
                     .commit();
         });

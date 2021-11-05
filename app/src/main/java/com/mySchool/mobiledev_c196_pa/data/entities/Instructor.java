@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Instructors")
 public class Instructor {
-    @PrimaryKey(autoGenerate = true) private long id;
+    @PrimaryKey(autoGenerate = true) private long instructorID;
     @NonNull private String name;
     @NonNull private String phone;
     @NonNull private String email;
@@ -17,12 +17,12 @@ public class Instructor {
         this.email = email;
     }
 
-    public long getId() {
-        return id;
+    public long getInstructorID() {
+        return instructorID;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setInstructorID(long instructorID) {
+        this.instructorID = instructorID;
     }
 
     @NonNull

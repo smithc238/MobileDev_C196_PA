@@ -47,7 +47,7 @@
             android:id="@+id/course_item_date_dash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date_dash"
+            android:text="@string/dash"
             app:layout_constraintEnd_toStartOf="@+id/course_item_end"
             app:layout_constraintStart_toEndOf="@+id/course_item_start"
             app:layout_constraintTop_toTopOf="parent" />

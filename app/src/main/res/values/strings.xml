@@ -6,7 +6,7 @@
     <string name="term_title">Term Title</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
-    <string name="date_dash">-</string>
+    <string name="dash">-</string>
     <string name="status">Status</string>
     <string name="course_title">Course Title</string>
     <string name="note">Note</string>
@@ -45,4 +45,10 @@
     <string name="optional_note">(Optional)</string>
     <string name="add_instructor">Add Instructor</string>
     <string name="add_assessment">Add Assessment</string>
+    <string name="assessment_title">Assessment Title</string>
+    <string name="type">Type</string>
+    <string name="objective">Objective</string>
+    <string name="performance">Performance</string>
+    <string name="description">Description</string>
+    <string name="assessment_description">Assessment description</string>
 </resources>
