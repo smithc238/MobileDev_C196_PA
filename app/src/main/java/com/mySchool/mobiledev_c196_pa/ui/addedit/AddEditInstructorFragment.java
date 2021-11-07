@@ -20,7 +20,9 @@ import com.mySchool.mobiledev_c196_pa.utilities.FormValidators;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
 /**
- * Class to add or edit an Instructor
+ * A simple {@link Fragment} subclass.
+ * Use the {@link AddEditInstructorFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
 public class AddEditInstructorFragment extends Fragment {
     private static final String INSTRUCTOR_ID = "id";
@@ -90,14 +92,14 @@ public class AddEditInstructorFragment extends Fragment {
         phone = v.findViewById(R.id.instructor_phone);
         email = v.findViewById(R.id.instructor_email);
         if (edit) {
-            instructorViewModel.getInstructor().observe(getViewLifecycleOwner(), instructor -> {
-                if (instructor != null) {
-                    name.setText(instructor.getName());
-                    phone.setText(instructor.getPhone());
-                    email.setText(instructor.getEmail());
+            instructorViewModel.getInstructorById(this.id).observe(getViewLifecycleOwner(), instructors -> {
+                if (!instructors.isEmpty()) {
+                    name.setText(instructors.get(0).getName());
+                    phone.setText(instructors.get(0).getPhone());
+                    email.setText(instructors.get(0).getEmail());
+                    this.instructor = instructors.get(0);
                 }
             });
-            this.instructor = instructorViewModel.getInstructor().getValue();
         }
         return v;
     }
@@ -110,8 +112,8 @@ public class AddEditInstructorFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_addedit_save) {
+        int option = item.getItemId();
+        if (option == R.id.menu_addedit_save) {
            if (formValidation()) {
                buildInstructor();
                if (edit) {
@@ -122,8 +124,7 @@ public class AddEditInstructorFragment extends Fragment {
                nextScreen();
                return true;
            }
-        }
-        if (id == R.id.menu_addedit_delete) {
+        } else if (option == R.id.menu_addedit_delete) {
             if (edit) { instructorViewModel.delete(instructor); }
             getActivity().finish();
             return true;

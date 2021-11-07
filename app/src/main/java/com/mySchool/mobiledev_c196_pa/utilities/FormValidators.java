@@ -1,6 +1,7 @@
 package com.mySchool.mobiledev_c196_pa.utilities;
 
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import java.time.ZonedDateTime;
 
@@ -10,7 +11,7 @@ public abstract class FormValidators {
     }
 
     /**
-     * Determines if name is not empty.
+     * Valid if name is not empty.
      * @param editText field to check
      * @return true if valid.
      */
@@ -23,7 +24,7 @@ public abstract class FormValidators {
     }
 
     /**
-     * Determines if Phone Number contains 10 characters.
+     * Valid if Phone Number contains 10 characters.
      * @param editText text to check.
      * @return true if check is valid.
      */
@@ -36,7 +37,7 @@ public abstract class FormValidators {
     }
 
     /**
-     * Determines if email is not empty.
+     * Valid if email is not empty.
      * @param editText email field to check.
      * @return true if valid.
      */
@@ -46,7 +47,7 @@ public abstract class FormValidators {
     }
 
     /**
-     * Determine if start is not empty.
+     * Valid if Start date is not empty.
      * @param start Start Date EditText.
      * @return true if valid, false if empty.
      */
@@ -55,7 +56,7 @@ public abstract class FormValidators {
     }
 
     /**
-     * Determines if End Date is after Start date and if both are not empty.
+     * Valid if End Date is this same or after Start date and both fields are not empty.
      * @param start EditText start date.
      * @param end EditText end date.
      * @return true if valid.
@@ -66,7 +67,16 @@ public abstract class FormValidators {
         } else {
             ZonedDateTime startDate = DateTimeConv.stringToDateLocalWithoutTime(start.getText().toString());
             ZonedDateTime endDate = DateTimeConv.stringToDateLocalWithoutTime(end.getText().toString());
-            return startDate.isBefore(endDate);
+            return endDate.isAfter(startDate) || endDate.isEqual(startDate);
         }
+    }
+
+    /**
+     * Valid if RadioGroup has an option selected.
+     * @param group RadioGroup to check.
+     * @return true if valid.
+     */
+    public static boolean radioGroupValidation(RadioGroup group) {
+        return group.getCheckedRadioButtonId() != -1;
     }
 }

@@ -2,17 +2,22 @@ package com.mySchool.mobiledev_c196_pa.ui.detailviews;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.mySchool.mobiledev_c196_pa.R;
@@ -44,8 +49,10 @@ public class DetailedCourseFragment extends Fragment {
     private EditText note;
 
 
+    /**
+     * Required empty public constructor.
+     */
     public DetailedCourseFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -68,7 +75,6 @@ public class DetailedCourseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setTitle("Course Details");
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             this.id = getArguments().getLong(COURSE_ID);
@@ -170,5 +176,32 @@ public class DetailedCourseFragment extends Fragment {
                 dropped.toggle();
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Course Details");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.detail_menu,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int option = item.getItemId();
+        if (option == R.id.menu_detail_edit) {
+            //TODO: add addedit course fragment.
+            //AddEdit course fragment
+            return true;
+        } else if (option == R.id.menu_detail_delete) {
+            //TODO: delete course.
+            //delete course.
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

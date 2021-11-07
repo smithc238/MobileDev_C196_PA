@@ -19,6 +19,7 @@ public class DateFormFiller {
     /**
      * Made constructor private to ensure static method was only version to instantiate this class.
      * @param editText editText to set DatePickerDialog.
+     * @param date date to set starting point, if null starts with current date.
      */
     private DateFormFiller(EditText editText, ZonedDateTime date) {
         this.editText = editText;
@@ -32,6 +33,7 @@ public class DateFormFiller {
     /**
      * Static method to get instance to set DatePickerDialog on EditText field.
      * @param editText editText to add DatePickerDialog.
+     * @param date date to set starting point, if null starts with current date.
      */
     public static void dateOnClickDatePicker(EditText editText, ZonedDateTime date) {
         editText.setOnClickListener(v -> {

@@ -168,13 +168,13 @@ public class AddEditTermFragment extends Fragment {
                         })
                         .setPositiveButton(R.string.delete, (dialog, which) -> {
                             termViewModel.delete(term);
-                            getActivity().finish();
+                            nextScreen();
                         })
                         .create();
                 alert.show();
             } else {
                 if (edit) { termViewModel.delete(term); }
-                getActivity().finish();
+                nextScreen();
             }
             return true;
         }
