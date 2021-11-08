@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.entities.CourseInstructorCrossRef;
 import com.mySchool.mobiledev_c196_pa.data.entities.CourseWithInstructors;
+import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
 import com.mySchool.mobiledev_c196_pa.data.entities.InstructorsWithCourses;
 import com.mySchool.mobiledev_c196_pa.data.repository.CourseInstructorXRepo;
 
@@ -43,5 +44,19 @@ public class CourseInstructorViewModel extends AndroidViewModel {
 
     public LiveData<List<InstructorsWithCourses>> getInstructorsWithCourses() {
         return instructorsWithCourses;
+    }
+
+    public void insertInstructorForCourse(long courseId, Instructor instructor) {
+        insert(new CourseInstructorCrossRef(courseId,instructor.getInstructorID()));
+    }
+    
+    public void insertInstructorsForCourse(long courseId, List<Instructor> instructors) {
+        for (Instructor instructor : instructors) {
+            insert(new CourseInstructorCrossRef(courseId, instructor.getInstructorID()));
+        }
+    }
+
+    public void removeInstructorFromCourse(long courseId, long instructorId) {
+        delete(new CourseInstructorCrossRef(courseId,instructorId));
     }
 }

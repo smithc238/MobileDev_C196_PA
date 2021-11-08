@@ -51,4 +51,6 @@
     <string name="performance">Performance</string>
     <string name="description">Description</string>
     <string name="assessment_description">Assessment description</string>
+    <string name="no_instructors">This course has no Instructors.\nAdd an Instructor to save.</string>
+    <string name="no_assessments">This course has no assessments.\nAdd an assessment to save.</string>
 </resources>

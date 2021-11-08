@@ -127,6 +127,17 @@
             app:layout_constraintStart_toStartOf="@+id/course_instructor_recyclerView"
             app:layout_constraintTop_toBottomOf="@+id/course_status_radio_group" />
 
+        <TextView
+            android:id="@+id/course_noInstructors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/no_instructors"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_instructor_header" />
+
         <Button
             android:id="@+id/course_addInstructor_button"
             style="@style/Theme.MySchool.Buttons"
@@ -136,7 +147,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/course_instructor_recyclerView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -146,11 +157,23 @@
             android:id="@+id/course_assessment_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="68dp"
             android:text="@string/assessment_s"
             app:layout_constraintEnd_toEndOf="@+id/course_assessment_recyclerView"
             app:layout_constraintStart_toStartOf="@+id/course_assessment_recyclerView"
             app:layout_constraintTop_toBottomOf="@+id/course_instructor_recyclerView" />
+
+        <TextView
+            android:id="@+id/course_noAssessments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/no_assessments"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/course_assessment_header"
+            tools:layout_constraintTop_toBottomOf="@id/course_assessment_header" />
 
         <Button
             android:id="@+id/course_addAssessment_button"
@@ -161,7 +184,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/course_assessment_recyclerView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -171,7 +194,7 @@
             android:id="@+id/course_note_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="48dp"
             android:text="@string/note"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/course_assessment_recyclerView" />
@@ -179,13 +202,14 @@
         <EditText
             android:id="@+id/course_note"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
             android:gravity="start|top"
             android:hint="@string/optional_note"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
+            android:minHeight="48dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

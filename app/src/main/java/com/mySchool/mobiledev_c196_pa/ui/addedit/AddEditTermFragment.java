@@ -43,8 +43,7 @@ public class AddEditTermFragment extends Fragment {
     private Button addButton;
     private Term term;
 
-    public AddEditTermFragment() {
-    }
+    public AddEditTermFragment() {}
 
     /**
      * Use this factory method to create a new instance of this fragment using the provided parameters.
@@ -65,12 +64,8 @@ public class AddEditTermFragment extends Fragment {
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             id = getArguments().getLong(EDIT_TERM_ID);
-            if (id > 0) {
-                edit = true;
-                getActivity().setTitle("Edit Term");
-            } else {
-                getActivity().setTitle("Add Term");
-            }
+            edit = id > 0;
+
         }
     }
 
@@ -116,7 +111,7 @@ public class AddEditTermFragment extends Fragment {
         }
         adapter.setOnCourseClickListener(course -> {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getCourseID(),this.id))
+                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getCourseID()))
                     .addToBackStack("AddEditTerm")
                     .commit();
         });
@@ -132,9 +127,21 @@ public class AddEditTermFragment extends Fragment {
 
     private void setAddCourseListener() {
         addButton.setOnClickListener(v -> {
-            //TODO: set listener to add course button.
-            Toast.makeText(getActivity(), "Add course clicked.", Toast.LENGTH_SHORT).show();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.detail_view_host, AddEditCourseFragment.newInstance(-1,this.id))
+                    .addToBackStack("AddEditTerm")
+                    .commit();
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (edit) {
+            getActivity().setTitle("Edit Term");
+        } else {
+            getActivity().setTitle("Add Term");
+        }
     }
 
     @Override
@@ -225,6 +232,4 @@ public class AddEditTermFragment extends Fragment {
             getParentFragmentManager().popBackStack();
         }
     }
-
-
 }

@@ -37,6 +37,7 @@ public abstract class MySchoolDatabase extends RoomDatabase {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     MySchoolDatabase.class,DATABASE_NAME)
                     .fallbackToDestructiveMigration()
+                    .addCallback(cleanUp)
                     .addCallback(mySchoolCallback)
                     .build();
         }
@@ -84,6 +85,16 @@ public abstract class MySchoolDatabase extends RoomDatabase {
                 INSTANCE.crossRefDao().insert(new CourseInstructorCrossRef(4,4));
                 INSTANCE.crossRefDao().insert(new CourseInstructorCrossRef(4,5));
                 INSTANCE.crossRefDao().insert(new CourseInstructorCrossRef(4,6));
+            });
+        }
+    };
+
+    private static RoomDatabase.Callback cleanUp = new Callback() {
+        @Override
+        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+            super.onOpen(db);
+            MySchoolExecutorService.getService().execute(() -> {
+                INSTANCE.assessmentDao().cleanAssessments();
             });
         }
     };

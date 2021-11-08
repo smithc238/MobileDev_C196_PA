@@ -35,7 +35,7 @@ public class AddEditAssessmentFragment extends Fragment {
     private static final String ASSESSMENT_ID = "id";
     private static final String COURSE_ID = "courseId";
     private long id;
-    private long courseId;
+    private Long courseId;
     AssessmentViewModel assessmentViewModel;
     Assessment assessment;
     private EditText title;
@@ -61,7 +61,7 @@ public class AddEditAssessmentFragment extends Fragment {
      * @param courseId Course ID.
      * @return A new instance of fragment AddEditAssessmentFragment.
      */
-    public static AddEditAssessmentFragment newInstance(long id, long courseId) {
+    public static AddEditAssessmentFragment newInstance(long id, Long courseId) {
         AddEditAssessmentFragment fragment = new AddEditAssessmentFragment();
         Bundle args = new Bundle();
         args.putLong(ASSESSMENT_ID, id);
@@ -84,6 +84,7 @@ public class AddEditAssessmentFragment extends Fragment {
                 //TODO: Test add assessment and delete new
                 getActivity().setTitle("Add Assessment");
             }
+            if (courseId < 0) { courseId = null; }
         }
     }
 
@@ -146,12 +147,15 @@ public class AddEditAssessmentFragment extends Fragment {
                 if (edit) {
                     assessmentViewModel.update(assessment);
                 } else {
+                    if (courseId == null) { assessmentViewModel.addToWorkingList(assessment); }
                     assessmentViewModel.insert(assessment);
+
                 }
                 nextScreen();
                 return true;
             }
         } else if (option == R.id.menu_addedit_delete) {
+            if (courseId == null) { assessmentViewModel.removeFromWorkingList(assessment); }
             if (edit) { assessmentViewModel.delete(assessment); }
             nextScreen();
             return true;

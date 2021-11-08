@@ -1,6 +1,5 @@
-package com.mySchool.mobiledev_c196_pa.ui.listviews;
+package com.mySchool.mobiledev_c196_pa.ui.addedit;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,37 +8,49 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.InstructorsListAdapter;
-import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailActivity;
+import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
+import com.mySchool.mobiledev_c196_pa.viewmodels.CourseInstructorViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
-public class InstructorListFragment extends Fragment {
-    private static final String INSTRUCTOR_ID = "id";
-    private InstructorViewModel instructorViewModel;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link AddInstructorFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class AddInstructorFragment extends Fragment {
+    private static final String COURSE_ID = "id";
     private long id;
+    private boolean edit;
+    private InstructorViewModel instructorViewModel;
+    private CourseInstructorViewModel courseInstructorViewModel;
 
-    public InstructorListFragment() {
-    }
+    /**
+     * Required empty public constructor
+     */
+    public AddInstructorFragment() {}
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param id Instructor ID.
-     * @return A new instance of fragment InstructorListFragment.
+     * @param id Course ID.
+     * @return A new instance of fragment AddInstructorDialog.
      */
-    public static InstructorListFragment newInstance(long id) {
-        InstructorListFragment fragment = new InstructorListFragment();
+    public static AddInstructorFragment newInstance(long id){
+        AddInstructorFragment fragment = new AddInstructorFragment();
         Bundle args = new Bundle();
-        args.putLong(INSTRUCTOR_ID, id);
+        args.putLong(COURSE_ID, id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,10 +58,10 @@ public class InstructorListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setTitle("Instructors");
         setHasOptionsMenu(true);
         if (getArguments() != null) {
-            id = getArguments().getLong(INSTRUCTOR_ID);
+            id = getArguments().getLong(COURSE_ID);
+            edit = this.id > 0;
         }
     }
 
@@ -64,15 +75,14 @@ public class InstructorListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
 
-        instructorViewModel = new ViewModelProvider(this).get(InstructorViewModel.class);
+        instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
+        courseInstructorViewModel = new ViewModelProvider(requireActivity()).get(CourseInstructorViewModel.class);
         instructorViewModel.getAllInstructors().observe(getViewLifecycleOwner(), instructors -> {
             adapter.setInstructors(instructors);
         });
-
         adapter.setOnInstructorClickListener(instructor -> {
-            Intent intent = DetailActivity.intentLoader(
-                    getActivity(), 4,  instructor.getInstructorID());
-            getActivity().startActivity(intent);
+            instructorViewModel.addToWorkingList(instructor);
+            getParentFragmentManager().popBackStack();
         });
         return v;
     }
@@ -80,16 +90,25 @@ public class InstructorListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.list_menu, menu);
+        inflater.inflate(R.menu.list_menu,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_list_add) {
-            Intent intent = DetailActivity.intentLoader(getActivity(), -4,-4);
-            getActivity().startActivity(intent);
+        int option = item.getItemId();
+        if (option == R.id.menu_list_add) {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.detail_view_host,AddEditInstructorFragment.newInstance(-1))
+                    .addToBackStack("AddInstructor")
+                    .commit();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Select an Instructor");
     }
 }

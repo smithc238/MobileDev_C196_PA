@@ -12,8 +12,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.mySchool.mobiledev_c196_pa.R;
+import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
+import com.mySchool.mobiledev_c196_pa.data.entities.CourseInstructorCrossRef;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditInstructorFragment;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditTermFragment;
+import com.mySchool.mobiledev_c196_pa.viewmodels.AssessmentViewModel;
+import com.mySchool.mobiledev_c196_pa.viewmodels.CourseInstructorViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
@@ -32,6 +36,8 @@ public class DetailActivity extends AppCompatActivity {
         TermViewModel termViewModel = new ViewModelProvider(this).get(TermViewModel.class);
         CourseViewModel courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
         InstructorViewModel instructorViewModel = new ViewModelProvider(this).get(InstructorViewModel.class);
+        AssessmentViewModel assessmentViewModel = new ViewModelProvider(this).get(AssessmentViewModel.class);
+        CourseInstructorViewModel courseInstructorViewModel = new ViewModelProvider(this).get(CourseInstructorViewModel.class);
 
         Intent intent = getIntent();
         this.type = intent.getIntExtra(TYPE, 0);
@@ -67,7 +73,7 @@ public class DetailActivity extends AppCompatActivity {
             default:
                 return DetailedTermFragment.newInstance(this.id);
             case 2:
-                //return CourseDetail
+                return DetailedCourseFragment.newInstance(this.id);
             case 3:
                 //return AssessmentDetail
             case 4:

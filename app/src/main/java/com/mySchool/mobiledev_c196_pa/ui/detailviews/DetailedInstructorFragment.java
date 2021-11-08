@@ -16,19 +16,28 @@ import android.widget.EditText;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
+import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditCourseFragment;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditInstructorFragment;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link DetailedInstructorFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class DetailedInstructorFragment extends Fragment {
     private static final String ID = "id";
     private long id;
     private InstructorViewModel instructorViewModel;
+    private Instructor instructor;
     private EditText name;
     private EditText phone;
     private EditText email;
 
-    public DetailedInstructorFragment() {
-    }
+    /**
+     * Required empty public constructor
+     */
+    public DetailedInstructorFragment() {}
 
     /**
      * Use this factory method to create a new instance of
@@ -66,8 +75,8 @@ public class DetailedInstructorFragment extends Fragment {
         instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
         instructorViewModel.getInstructorById(this.id).observe(getViewLifecycleOwner(), instructors -> {
             if (!instructors.isEmpty()) {
-                    instructorViewModel.setInstructor(instructors.get(0));
                     populateFields(instructors.get(0));
+                    this.instructor = instructors.get(0);
             }
         });
         return v;
@@ -89,8 +98,8 @@ public class DetailedInstructorFragment extends Fragment {
                     .addToBackStack("detail")
                     .commit();
         } else if (id == R.id.menu_detail_delete) {
-            instructorViewModel.delete(instructorViewModel.getInstructor().getValue());
-            getActivity().finish();
+            instructorViewModel.delete(instructor);
+            nextScreen();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -117,5 +126,13 @@ public class DetailedInstructorFragment extends Fragment {
         name.setText(instructor.getName());
         phone.setText(instructor.getPhone());
         email.setText(instructor.getEmail());
+    }
+
+    private void nextScreen() {
+        if (getParentFragmentManager().getBackStackEntryCount() == 0) {
+            getActivity().finish();
+        } else {
+            getParentFragmentManager().popBackStack();
+        }
     }
 }

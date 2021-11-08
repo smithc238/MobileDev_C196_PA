@@ -1,6 +1,7 @@
 package com.mySchool.mobiledev_c196_pa.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,19 +11,20 @@ import androidx.lifecycle.MutableLiveData;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
 import com.mySchool.mobiledev_c196_pa.data.repository.InstructorRepo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InstructorViewModel extends AndroidViewModel {
     private InstructorRepo repo;
     private LiveData<List<Instructor>> allInstructors;
-    private MutableLiveData<Instructor> instuctor;
+    private MutableLiveData<List<Instructor>> workingList;
 
 
     public InstructorViewModel(@NonNull Application application) {
         super(application);
         repo = new InstructorRepo(application);
         allInstructors = repo.getAllInstructors();
-        instuctor = new MutableLiveData<>();
+        workingList = new MutableLiveData<>(new ArrayList<>());
     }
 
     public void insert(Instructor instructor) {
@@ -49,11 +51,19 @@ public class InstructorViewModel extends AndroidViewModel {
         return allInstructors;
     }
 
-    public void setInstructor(Instructor instructor) {
-        this.instuctor.setValue(instructor);
+    public void addToWorkingList(Instructor instructor) {
+        workingList.getValue().add(instructor);
     }
 
-    public LiveData<Instructor> getInstructor() {
-        return instuctor;
+    public void setWorkingList(List<Instructor> instructors) {
+        workingList.setValue(instructors);
+    }
+
+    public void removeFromWorkingList(Instructor instructor) {
+        workingList.getValue().remove(instructor);
+    }
+
+    public LiveData<List<Instructor>> getWorkingList() {
+        return workingList;
     }
 }

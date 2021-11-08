@@ -60,7 +60,6 @@ public class DetailedTermFragment extends Fragment {
         if (getArguments() != null) {
             id = getArguments().getLong(TERM_ID);
         }
-        getActivity().setTitle("Term Details");
     }
 
     @Override
@@ -97,11 +96,17 @@ public class DetailedTermFragment extends Fragment {
         });
         adapter.setOnCourseClickListener(course -> {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getCourseID(),this.id))
+                    .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getCourseID()))
                     .addToBackStack("DetailedTerm")
                     .commit();
         });
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Term Details");
     }
 
     @Override

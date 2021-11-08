@@ -21,9 +21,9 @@ public class Assessment {
     private ZonedDateTime end;
     private String description;
     @NonNull private ExamType type;
-    @NonNull private Long courseId;
+    private Long courseId;
 
-    public Assessment(@NonNull String title, ZonedDateTime start, ZonedDateTime end, String description, @NonNull ExamType type, @NonNull Long courseId) {
+    public Assessment(@NonNull String title, ZonedDateTime start, ZonedDateTime end, String description, @NonNull ExamType type, Long courseId) {
         this.title = title;
         this.start = start;
         this.end = end;
@@ -82,12 +82,11 @@ public class Assessment {
         this.type = type;
     }
 
-    @NonNull
     public Long getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(@NonNull Long courseId) {
+    public void setCourseId(Long courseId) {
         this.courseId = courseId;
     }
 }

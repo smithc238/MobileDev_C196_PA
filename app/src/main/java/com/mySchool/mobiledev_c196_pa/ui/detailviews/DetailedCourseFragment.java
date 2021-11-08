@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,15 +18,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.AssessmentListAdapter;
 import com.mySchool.mobiledev_c196_pa.adapters.InstructorsListAdapter;
+import com.mySchool.mobiledev_c196_pa.data.entities.Course;
+import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
 import com.mySchool.mobiledev_c196_pa.data.entities.Status;
+import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditCourseFragment;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,10 +39,9 @@ import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
  */
 public class DetailedCourseFragment extends Fragment {
     private static final String COURSE_ID = "id";
-    public static final String TERM_ID = "termId";
     private long id;
-    private long termId;
     private CourseViewModel courseViewModel;
+    private Course course;
     private EditText title;
     private EditText start;
     private EditText end;
@@ -52,22 +56,19 @@ public class DetailedCourseFragment extends Fragment {
     /**
      * Required empty public constructor.
      */
-    public DetailedCourseFragment() {
-    }
+    public DetailedCourseFragment() {}
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param id Course ID.
-     * @param termId Associated Term ID.
      * @return A new instance of fragment DetailedCourseFragment.
      */
-    public static DetailedCourseFragment newInstance(long id, long termId) {
+    public static DetailedCourseFragment newInstance(long id) {
         DetailedCourseFragment fragment = new DetailedCourseFragment();
         Bundle args = new Bundle();
         args.putLong(COURSE_ID, id);
-        args.putLong(TERM_ID,termId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,7 +79,6 @@ public class DetailedCourseFragment extends Fragment {
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             this.id = getArguments().getLong(COURSE_ID);
-            this.termId = getArguments().getLong(TERM_ID);
         }
     }
 
@@ -98,8 +98,9 @@ public class DetailedCourseFragment extends Fragment {
         AssessmentListAdapter aAdapter = new AssessmentListAdapter(v.getContext());
         assessmentRecycler.setAdapter(aAdapter);
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
-        courseViewModel.getCourseById(id).observe(getViewLifecycleOwner(), course -> {
+        courseViewModel.getCourseById(this.id).observe(getViewLifecycleOwner(), course -> {
             if (!course.isEmpty()) {
+                this.course = course.get(0);
                 title.setText(course.get(0).getTitle());
                 start.setText(DateTimeConv.dateToStringLocal(course.get(0).getStart()));
                 end.setText(DateTimeConv.dateToStringLocal(course.get(0).getEnd()));
@@ -112,12 +113,8 @@ public class DetailedCourseFragment extends Fragment {
                 }
             }
         });
-        courseViewModel.getAssociatedInstructors(id).observe(getViewLifecycleOwner(),instructors -> {
-            if (!instructors.isEmpty()) {
-                iAdapter.setInstructors(instructors);
-            }
-        });
-        courseViewModel.getAssociatedAssessments(id).observe(getViewLifecycleOwner(),assessments -> {
+        courseViewModel.getAssociatedInstructors(this.id).observe(getViewLifecycleOwner(), iAdapter::setInstructors);
+        courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(),assessments -> {
             if (!assessments.isEmpty()) {
                 aAdapter.setAssessments(assessments);
             }
@@ -130,7 +127,7 @@ public class DetailedCourseFragment extends Fragment {
         });
         aAdapter.setOnAssessmentClickListener(assessment -> {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host,DetailedAssessmentFragment.newInstance(assessment.getId(),this.id))
+                    .replace(R.id.detail_view_host,DetailedAssessmentFragment.newInstance(assessment.getId()))
                     .addToBackStack("DetailedCourse")
                     .commit();
         });
@@ -149,6 +146,8 @@ public class DetailedCourseFragment extends Fragment {
         note = v.findViewById(R.id.course_note);
         Button addInstructor = v.findViewById(R.id.course_addInstructor_button);
         Button addAssessment = v.findViewById(R.id.course_addAssessment_button);
+        TextView noInstructors = v.findViewById(R.id.course_noInstructors);
+        TextView noAssessments = v.findViewById(R.id.course_noAssessments);
         title.setClickable(false);
         title.setCursorVisible(false);
         title.setFocusable(false);
@@ -159,6 +158,8 @@ public class DetailedCourseFragment extends Fragment {
         note.setBackground(null);
         addInstructor.setVisibility(View.GONE);
         addAssessment.setVisibility(View.GONE);
+        noInstructors.setVisibility(View.GONE);
+        noAssessments.setVisibility(View.GONE);
     }
 
     private void selectStatus(Status status) {
@@ -194,14 +195,24 @@ public class DetailedCourseFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int option = item.getItemId();
         if (option == R.id.menu_detail_edit) {
-            //TODO: add addedit course fragment.
-            //AddEdit course fragment
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.detail_view_host, AddEditCourseFragment.newInstance(this.id,this.course.getTermID()))
+                    .addToBackStack("DetailedCourse")
+                    .commit();
             return true;
         } else if (option == R.id.menu_detail_delete) {
-            //TODO: delete course.
-            //delete course.
+            courseViewModel.delete(course);
+            nextScreen();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void nextScreen() {
+        if (getParentFragmentManager().getBackStackEntryCount() == 0) {
+            getActivity().finish();
+        } else {
+            getParentFragmentManager().popBackStack();
+        }
     }
 }

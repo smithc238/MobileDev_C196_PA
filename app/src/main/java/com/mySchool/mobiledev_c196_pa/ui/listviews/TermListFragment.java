@@ -66,7 +66,7 @@ public class TermListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.list_view_add) {
+        if (id == R.id.menu_list_add) {
             Intent intent = DetailActivity.intentLoader(getActivity(), -1,-1);
             getActivity().startActivity(intent);
             return true;

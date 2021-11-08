@@ -16,6 +16,7 @@ import android.widget.EditText;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
+import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailedInstructorFragment;
 import com.mySchool.mobiledev_c196_pa.utilities.FormValidators;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
@@ -125,8 +126,11 @@ public class AddEditInstructorFragment extends Fragment {
                return true;
            }
         } else if (option == R.id.menu_addedit_delete) {
-            if (edit) { instructorViewModel.delete(instructor); }
-            getActivity().finish();
+            if (edit) {
+                instructorViewModel.delete(instructor);
+                //TODO correct for returning to detailed instructor.
+            }
+            nextScreen();
             return true;
         }
         return super.onOptionsItemSelected(item);
