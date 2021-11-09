@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.time.ZonedDateTime;
@@ -21,7 +22,7 @@ public class Assessment {
     private ZonedDateTime end;
     private String description;
     @NonNull private ExamType type;
-    private Long courseId;
+    @ColumnInfo(index = true) private Long courseId;
 
     public Assessment(@NonNull String title, ZonedDateTime start, ZonedDateTime end, String description, @NonNull ExamType type, Long courseId) {
         this.title = title;
