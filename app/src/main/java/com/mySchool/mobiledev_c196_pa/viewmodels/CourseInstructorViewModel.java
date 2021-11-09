@@ -38,6 +38,10 @@ public class CourseInstructorViewModel extends AndroidViewModel {
         repo.delete(crossRef);
     }
 
+    public void removeAllCourseInstructors(long courseId) {
+        repo.removeAllCourseInstructors(courseId);
+    }
+
     public LiveData<List<CourseWithInstructors>> getCoursesWithInstructors() {
         return courseWithInstructors;
     }

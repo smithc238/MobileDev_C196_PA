@@ -27,6 +27,10 @@ public interface CourseInstructorCrossRefDao {
     void delete(CourseInstructorCrossRef courseInstructorCrossRef);
 
     @Transaction
+    @Query("DELETE FROM courseinstructorcrossref WHERE courseID = :courseId")
+    void removeAllCourseInstructors(long courseId);
+
+    @Transaction
     @Query("SELECT * FROM courses")
     LiveData<List<CourseWithInstructors>> getCoursesWithInstructors();
 

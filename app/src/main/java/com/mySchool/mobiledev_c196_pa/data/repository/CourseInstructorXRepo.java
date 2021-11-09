@@ -35,6 +35,10 @@ public class CourseInstructorXRepo {
         dbExecutor.execute(() -> crossRefDao.delete(crossRef));
     }
 
+    public void removeAllCourseInstructors(long courseId) {
+        dbExecutor.execute(() -> crossRefDao.removeAllCourseInstructors(courseId));
+    }
+
     public LiveData<List<CourseWithInstructors>> getCoursesWithInstructors() {
         return crossRefDao.getCoursesWithInstructors();
     }
