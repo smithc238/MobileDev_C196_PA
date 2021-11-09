@@ -8,9 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
-import com.mySchool.mobiledev_c196_pa.data.entities.CourseWithInstructors;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
-import com.mySchool.mobiledev_c196_pa.data.entities.InstructorsWithCourses;
 import com.mySchool.mobiledev_c196_pa.data.repository.CourseRepo;
 
 import java.util.List;
@@ -25,19 +23,29 @@ public class CourseViewModel extends AndroidViewModel {
         allCourses = repo.getAllCourses();
     }
 
-    public void insert(Course course) {repo.insert(course);}
+    public LiveData<Long> insert(Course course) {
+        return repo.insert(course);
+    }
 
-    public void update(Course course) {repo.update(course);}
+    public void update(Course course) {
+        repo.update(course);
+    }
 
-    public void delete(Course course) {repo.delete(course);}
+    public void delete(Course course) {
+        repo.delete(course);
+    }
 
-    public void deleteAllCourses() {repo.deleteAllCourses();}
+    public void deleteAllCourses() {
+        repo.deleteAllCourses();
+    }
 
     public LiveData<List<Course>> getCourseById(long id) {
         return repo.getCourseById(id);
     }
 
-    public LiveData<List<Course>> getAllCourses() {return allCourses;}
+    public LiveData<List<Course>> getAllCourses() {
+        return allCourses;
+    }
 
     public LiveData<List<Instructor>> getAssociatedInstructors(long id) {
         return repo.getAssociatedInstructors(id);
