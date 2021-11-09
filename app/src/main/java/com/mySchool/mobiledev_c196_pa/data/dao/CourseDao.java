@@ -11,14 +11,13 @@ import androidx.room.Update;
 import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
-import com.mySchool.mobiledev_c196_pa.data.entities.InstructorsWithCourses;
 
 import java.util.List;
 
 @Dao
 public interface CourseDao {
     @Insert
-    void insert(Course course);
+    long insert(Course course);
 
     @Update
     void update(Course course);
