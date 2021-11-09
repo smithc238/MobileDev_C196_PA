@@ -73,7 +73,6 @@ public class AddEditInstructorFragment extends Fragment {
                 getActivity().setTitle("Add Instructor");
             }
         }
-
     }
 
     /**
@@ -121,15 +120,15 @@ public class AddEditInstructorFragment extends Fragment {
                } else {
                    instructorViewModel.insert(instructor);
                }
-               nextScreen();
+               nextScreen(false);
                return true;
            }
         } else if (option == R.id.menu_addedit_delete) {
             if (edit) {
+                instructorViewModel.removeFromWorkingList(this.instructor);
                 instructorViewModel.delete(instructor);
-                //TODO correct for returning to detailed instructor.
             }
-            nextScreen();
+            nextScreen(true);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -163,9 +162,16 @@ public class AddEditInstructorFragment extends Fragment {
         }
     }
 
-    private void nextScreen() {
-        if (getParentFragmentManager().getBackStackEntryCount() == 0) {
+    private void nextScreen(boolean delete) {
+        int backStackCount = getParentFragmentManager().getBackStackEntryCount();
+        if (backStackCount == 0) {
             getActivity().finish();
+        } else if (backStackCount == 1 && edit && delete) {
+            getActivity().finish();
+        } else if (backStackCount > 1 && edit && delete) {
+            //Skips past Detail view
+            getParentFragmentManager().popBackStack();
+            getParentFragmentManager().popBackStack();
         } else {
             getParentFragmentManager().popBackStack();
         }

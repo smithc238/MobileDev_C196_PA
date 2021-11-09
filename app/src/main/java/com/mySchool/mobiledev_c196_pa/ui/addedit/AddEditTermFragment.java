@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.CourseListAdapter;
@@ -162,7 +161,7 @@ public class AddEditTermFragment extends Fragment {
                 } else {
                     termViewModel.insert(this.term);
                 }
-                nextScreen();
+                nextScreen(false);
                 return true;
             }
         } else if (id == R.id.menu_addedit_delete) {
@@ -175,13 +174,13 @@ public class AddEditTermFragment extends Fragment {
                         })
                         .setPositiveButton(R.string.delete, (dialog, which) -> {
                             termViewModel.delete(term);
-                            nextScreen();
+                            nextScreen(true);
                         })
                         .create();
                 alert.show();
             } else {
                 if (edit) { termViewModel.delete(term); }
-                nextScreen();
+                nextScreen(true);
             }
             return true;
         }
@@ -225,9 +224,16 @@ public class AddEditTermFragment extends Fragment {
         }
     }
 
-    private void nextScreen() {
-        if (getParentFragmentManager().getBackStackEntryCount() == 0) {
+    private void nextScreen(boolean delete) {
+        int backStackCount = getParentFragmentManager().getBackStackEntryCount();
+        if (backStackCount == 0) {
             getActivity().finish();
+        } else if (backStackCount == 1 && edit && delete) {
+            getActivity().finish();
+        } else if (backStackCount > 1 && edit && delete) {
+            //Skips past Detail view
+            getParentFragmentManager().popBackStack();
+            getParentFragmentManager().popBackStack();
         } else {
             getParentFragmentManager().popBackStack();
         }
