@@ -57,6 +57,10 @@ public class InstructorsListAdapter extends RecyclerView.Adapter<InstructorsList
         }
     }
 
+    public Instructor getInstructorAt(int position){
+        return instructors.get(position);
+    }
+
     public void setInstructors(List<Instructor> instructors) {
         this.instructors = instructors;
         notifyDataSetChanged();
