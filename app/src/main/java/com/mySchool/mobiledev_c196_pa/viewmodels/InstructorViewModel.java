@@ -1,7 +1,6 @@
 package com.mySchool.mobiledev_c196_pa.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -18,7 +17,6 @@ public class InstructorViewModel extends AndroidViewModel {
     private InstructorRepo repo;
     private LiveData<List<Instructor>> allInstructors;
     private MutableLiveData<List<Instructor>> workingList;
-
 
     public InstructorViewModel(@NonNull Application application) {
         super(application);
@@ -60,7 +58,9 @@ public class InstructorViewModel extends AndroidViewModel {
     }
 
     public void removeFromWorkingList(Instructor instructor) {
-        workingList.getValue().remove(instructor);
+        //Addresses wouldn't match if I used normal array remove object.
+        workingList.getValue().removeIf(item ->
+                item.getInstructorID() == instructor.getInstructorID());
     }
 
     public LiveData<List<Instructor>> getWorkingList() {
