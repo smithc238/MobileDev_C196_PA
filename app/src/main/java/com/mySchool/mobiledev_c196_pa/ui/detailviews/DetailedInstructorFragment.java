@@ -16,7 +16,6 @@ import android.widget.EditText;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
-import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditCourseFragment;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditInstructorFragment;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
@@ -95,7 +94,7 @@ public class DetailedInstructorFragment extends Fragment {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.detail_view_host,
                             AddEditInstructorFragment.newInstance(this.id))
-                    .addToBackStack("detail")
+                    .addToBackStack("DetailedInstructor")
                     .commit();
         } else if (id == R.id.menu_detail_delete) {
             instructorViewModel.delete(instructor);

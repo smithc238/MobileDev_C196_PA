@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,15 +11,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.mySchool.mobiledev_c196_pa.R;
-import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
-import com.mySchool.mobiledev_c196_pa.data.entities.CourseInstructorCrossRef;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditInstructorFragment;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditTermFragment;
-import com.mySchool.mobiledev_c196_pa.viewmodels.AssessmentViewModel;
-import com.mySchool.mobiledev_c196_pa.viewmodels.CourseInstructorViewModel;
-import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
-import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
-import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
 public class DetailActivity extends AppCompatActivity {
     private final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -33,11 +25,6 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
-        TermViewModel termViewModel = new ViewModelProvider(this).get(TermViewModel.class);
-        CourseViewModel courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
-        InstructorViewModel instructorViewModel = new ViewModelProvider(this).get(InstructorViewModel.class);
-        AssessmentViewModel assessmentViewModel = new ViewModelProvider(this).get(AssessmentViewModel.class);
-        CourseInstructorViewModel courseInstructorViewModel = new ViewModelProvider(this).get(CourseInstructorViewModel.class);
 
         Intent intent = getIntent();
         this.type = intent.getIntExtra(TYPE, 0);
