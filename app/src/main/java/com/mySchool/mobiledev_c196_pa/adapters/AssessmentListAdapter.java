@@ -60,6 +60,10 @@ public class AssessmentListAdapter extends RecyclerView.Adapter<AssessmentListAd
         }
     }
 
+    public Assessment getAssessmentAt(int position) {
+        return assessments.get(position);
+    }
+
     public void setAssessments(List<Assessment> assessments) {
         this.assessments = assessments;
         notifyDataSetChanged();
