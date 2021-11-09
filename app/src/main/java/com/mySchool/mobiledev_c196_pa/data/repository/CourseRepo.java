@@ -3,16 +3,13 @@ package com.mySchool.mobiledev_c196_pa.data.repository;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.dao.CourseDao;
-import com.mySchool.mobiledev_c196_pa.data.dao.CourseInstructorCrossRefDao;
 import com.mySchool.mobiledev_c196_pa.data.database.MySchoolDatabase;
 import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
-import com.mySchool.mobiledev_c196_pa.data.entities.CourseInstructorCrossRef;
-import com.mySchool.mobiledev_c196_pa.data.entities.CourseWithInstructors;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
-import com.mySchool.mobiledev_c196_pa.data.entities.InstructorsWithCourses;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -20,15 +17,20 @@ import java.util.concurrent.ExecutorService;
 public class CourseRepo {
     private CourseDao courseDao;
     private final ExecutorService dbExecutor;
+    private MutableLiveData<Long> rowID;
 
     public CourseRepo(Application application) {
         MySchoolDatabase db = MySchoolDatabase.getInstance(application);
         courseDao = db.courseDao();
         dbExecutor = MySchoolExecutorService.getService();
+        rowID = new MutableLiveData<>();
     }
 
-    public void insert(Course course) {
-        dbExecutor.execute(() -> courseDao.insert(course));
+    public LiveData<Long> insert(Course course) {
+        dbExecutor.execute(() -> {
+            this.rowID.postValue(courseDao.insert(course));
+        });
+        return rowID;
     }
 
     public void update(Course course) {
