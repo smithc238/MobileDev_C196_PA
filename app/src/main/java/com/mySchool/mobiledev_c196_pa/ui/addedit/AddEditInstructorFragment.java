@@ -16,7 +16,6 @@ import android.widget.EditText;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
-import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailedInstructorFragment;
 import com.mySchool.mobiledev_c196_pa.utilities.FormValidators;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
