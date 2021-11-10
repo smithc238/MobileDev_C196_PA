@@ -25,6 +25,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         Intent intent = getIntent();
         this.type = intent.getIntExtra(TYPE, 0);
