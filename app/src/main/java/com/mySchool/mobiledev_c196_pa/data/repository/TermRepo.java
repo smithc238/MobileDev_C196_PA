@@ -11,7 +11,10 @@ import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class TermRepo {
     private TermDao termDao;
@@ -23,16 +26,20 @@ public class TermRepo {
         dbExecutor = MySchoolExecutorService.getService();
     }
 
-    public void insert(Term term) {
-       dbExecutor.execute(() -> {
-           termDao.insert(term);
-       });
+    public long insert(Term term) {
+        long rowID = 0;
+        Callable<Long> insertCallable = () -> termDao.insert(term);
+        Future<Long> future = dbExecutor.submit(insertCallable);
+        try {
+            rowID = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return rowID;
     }
 
     public void update(Term term) {
-        dbExecutor.execute(()-> {
-            termDao.update(term);
-        });
+        dbExecutor.execute(()-> termDao.update(term));
     }
 
     public void delete(Term term) {

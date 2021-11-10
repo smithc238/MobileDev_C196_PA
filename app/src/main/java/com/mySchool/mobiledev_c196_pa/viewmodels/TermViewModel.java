@@ -26,8 +26,8 @@ public class TermViewModel extends AndroidViewModel {
         selectedTerm = new MutableLiveData<>();
     }
 
-    public void insert(Term term) {
-        repo.insert(term);
+    public long insert(Term term) {
+        return repo.insert(term);
     }
 
     public void update(Term term) {

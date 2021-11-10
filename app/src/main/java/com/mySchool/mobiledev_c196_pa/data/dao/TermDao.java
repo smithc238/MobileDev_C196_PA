@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public interface TermDao {
     @Insert
-    void insert(Term term);
+    long insert(Term term);
 
     @Update
     void update(Term term);
