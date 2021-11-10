@@ -78,6 +78,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Co
         }
     }
 
+    public Course getCourseAt(int position) {
+        return courses.get(position);
+    }
+
     public void setCourses(List<Course> courses) {
         this.courses = courses;
         notifyDataSetChanged();
