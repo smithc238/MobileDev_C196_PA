@@ -90,7 +90,7 @@ public class AddEditCourseFragment extends Fragment {
         AddEditCourseFragment fragment = new AddEditCourseFragment();
         Bundle args = new Bundle();
         args.putLong(COURSE_ID, id);
-        args.putLong(TERM_ID, termId);
+        args.putString(TERM_ID, String.valueOf(termId));
         fragment.setArguments(args);
         return fragment;
     }
@@ -101,9 +101,14 @@ public class AddEditCourseFragment extends Fragment {
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             id = getArguments().getLong(COURSE_ID);
-            termId = getArguments().getLong(TERM_ID);
+            String tID = getArguments().getString(TERM_ID);
+            try {
+                termId = Long.valueOf(tID);
+                if (termId < 0 ) { termId = null; }
+            } catch (NumberFormatException e) {
+                termId = null;
+            }
             edit = id > 0;
-            if (termId < 0 ) { termId = null; }
         }
     }
 
@@ -205,6 +210,7 @@ public class AddEditCourseFragment extends Fragment {
                 .replace(R.id.detail_view_host,AddEditAssessmentFragment.newInstance(-1,this.id))
                 .addToBackStack("AddEditCourse")
                 .commit());
+        // GestureHelpers
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -256,6 +262,16 @@ public class AddEditCourseFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (edit) {
+            getActivity().setTitle("Edit Course");
+        } else {
+            getActivity().setTitle("Add Course");
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.add_edit_menu,menu);
@@ -269,32 +285,33 @@ public class AddEditCourseFragment extends Fragment {
                 buildCourse();
                 if (edit) {
                     courseViewModel.update(course);
+                    //For New term
+                    courseViewModel.removeFromWorkingList(course);
+                    courseViewModel.addToWorkingList(course);
+                    //Entity relations
                     courseInstructorViewModel.removeAllCourseInstructors(this.id);
                     courseInstructorViewModel.insertInstructorsForCourse(this.id, courseInstructors);
                 } else {
-                    this.id = courseViewModel.insert(course);
-                    courseInstructorViewModel.insertInstructorsForCourse(this.id,courseInstructors);
-                    assessmentViewModel.updateAssessmentFKeys(this.id, courseAssessments);
+                    long rowID= courseViewModel.insert(course);
+                    //For New term
+                    course.setCourseID(rowID);
+                    courseViewModel.addToWorkingList(course);
+                    //Entity Relations
+                    courseInstructorViewModel.insertInstructorsForCourse(rowID,courseInstructors);
+                    assessmentViewModel.updateAssessmentFKeys(rowID, courseAssessments);
                 }
                 nextScreen(false);
+                return true;
             }
-            return true;
         } else if (option == R.id.menu_addedit_delete) {
-            if (edit) { courseViewModel.delete(this.course); }
+            if (edit) {
+                courseViewModel.removeFromWorkingList(course);
+                courseViewModel.delete(this.course);
+            }
             nextScreen(true);
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (edit) {
-            getActivity().setTitle("Edit Course");
-        } else {
-            getActivity().setTitle("Add Course");
-        }
     }
 
     private boolean formValidation() {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,38 +22,53 @@ import android.widget.TextView;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.CourseListAdapter;
+import com.mySchool.mobiledev_c196_pa.data.entities.Course;
 import com.mySchool.mobiledev_c196_pa.data.entities.Term;
 import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailedCourseFragment;
 import com.mySchool.mobiledev_c196_pa.utilities.DateFormFiller;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.utilities.FormValidators;
+import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link AddEditTermFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
 public class AddEditTermFragment extends Fragment {
-    private static final String EDIT_TERM_ID = "id";
+    private static final String TERM_ID = "id";
     private boolean edit = false;
     private long id;
     private TermViewModel termViewModel;
+    private CourseViewModel courseViewModel;
     private EditText title;
     private EditText start;
     private EditText end;
     private TextView noCourses;
-    private Button addButton;
+    private Button addCourseButton;
     private Term term;
+    private List<Course> termCourses;
 
+    /**
+     * Required empty constructor.
+     */
     public AddEditTermFragment() {}
 
     /**
-     * Use this factory method to create a new instance of this fragment using the provided parameters.
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
      * @param termID term ID > 0 for edit, < 0 is add.
      * @return A new instance of fragment AddEditTermFragment.
      */
     public static AddEditTermFragment newInstance(long termID) {
         AddEditTermFragment fragment = new AddEditTermFragment();
         Bundle args = new Bundle();
-        args.putLong(EDIT_TERM_ID, termID);
+        args.putLong(TERM_ID, termID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +78,11 @@ public class AddEditTermFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
-            id = getArguments().getLong(EDIT_TERM_ID);
+            id = getArguments().getLong(TERM_ID);
             edit = id > 0;
-
         }
+        //TODO remove working courses on backpressed when not saved.
+        //TODO same might be for assessments.
     }
 
     @Override
@@ -76,16 +93,16 @@ public class AddEditTermFragment extends Fragment {
         start = v.findViewById(R.id.term_start);
         end = v.findViewById(R.id.term_end);
         noCourses = v.findViewById(R.id.term_noCourses);
-        addButton = v.findViewById(R.id.term_addCourse_button);
-        setAddCourseListener();
-
+        addCourseButton = v.findViewById(R.id.term_addCourse_button);
+        DateFormFiller.dateOnClickDatePicker(start,null);
+        DateFormFiller.dateOnClickDatePicker(end,null);
         RecyclerView recyclerView = v.findViewById(R.id.term_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         CourseListAdapter adapter = new CourseListAdapter(v.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-
         termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
+        courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
         if (edit) {
             termViewModel.getTerm().observe(getViewLifecycleOwner(), term -> {
                 if (term != null) {
@@ -98,31 +115,49 @@ public class AddEditTermFragment extends Fragment {
             });
             this.term = termViewModel.getTerm().getValue();
             termViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
-                if (!courses.isEmpty()) {
-                    adapter.setCourses(courses);
-                    noCourses.setVisibility(View.GONE);
+                if (!courses.isEmpty() && courseViewModel.getWorkingList().getValue().isEmpty()) {
+                    courseViewModel.setWorkingList(courses);
                 }
             });
-        } else {
-            DateFormFiller.dateOnClickDatePicker(start,null);
-            DateFormFiller.dateOnClickDatePicker(end,null);
         }
+        courseViewModel.getWorkingList().observe(getViewLifecycleOwner(),courses -> {
+            if (!courses.isEmpty()) {
+                adapter.setCourses(courses);
+                termCourses = courses;
+                noCourses.setVisibility(View.GONE);
+            } else {
+                noCourses.setVisibility(View.VISIBLE);
+            }
+        });
         adapter.setOnCourseClickListener(course -> {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.detail_view_host, DetailedCourseFragment.newInstance(course.getCourseID()))
                     .addToBackStack("AddEditTerm")
                     .commit();
         });
-        return v;
-    }
-
-    private void setAddCourseListener() {
-        addButton.setOnClickListener(v -> {
+        addCourseButton.setOnClickListener(v1 -> {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.detail_view_host, AddEditCourseFragment.newInstance(-1,this.id))
                     .addToBackStack("AddEditTerm")
                     .commit();
         });
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Course course = adapter.getCourseAt(viewHolder.getBindingAdapterPosition());
+                courseViewModel.removeFromWorkingList(course);
+                courseViewModel.delete(course);
+                if (termCourses.isEmpty()) { noCourses.setVisibility(View.VISIBLE); }
+                adapter.notifyItemRemoved(viewHolder.getBindingAdapterPosition());
+            }
+        }).attachToRecyclerView(recyclerView);
+        return v;
     }
 
     @Override
@@ -151,7 +186,9 @@ public class AddEditTermFragment extends Fragment {
                 if (edit) {
                     termViewModel.update(this.term);
                 } else {
-                    termViewModel.insert(this.term);
+                    //TODO Course FK did not update.
+                    this.id = termViewModel.insert(this.term);
+                    courseViewModel.updateFKs(this.id, termCourses);
                 }
                 nextScreen(false);
                 return true;
@@ -229,5 +266,12 @@ public class AddEditTermFragment extends Fragment {
         } else {
             getParentFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //Not really necessary as term is the base of activity, but just in case.
+        courseViewModel.getWorkingList().getValue().clear();
     }
 }
