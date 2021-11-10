@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.time.ZonedDateTime;
@@ -14,7 +15,7 @@ import java.time.ZonedDateTime;
 @Entity(tableName = "Courses",
         foreignKeys = @ForeignKey(entity = Term.class,
         parentColumns = "id", childColumns = "termID",
-                onDelete = CASCADE))
+                onDelete = CASCADE),indices = @Index("termID"))
 public class Course {
     @PrimaryKey(autoGenerate = true) private long courseID;
     @NonNull private String title;
@@ -22,11 +23,9 @@ public class Course {
     private ZonedDateTime start;
     private ZonedDateTime end;
     private String note;
-    @ColumnInfo(defaultValue = "null", index = true)
-    @Nullable
     private Long termID;
 
-    public Course(@NonNull String title, Status status, ZonedDateTime start, ZonedDateTime end, String note, @Nullable Long termID) {
+    public Course(@NonNull String title, Status status, ZonedDateTime start, ZonedDateTime end, String note, Long termID) {
         this.title = title;
         this.status = status;
         this.start = start;
@@ -85,11 +84,11 @@ public class Course {
         this.note = note;
     }
 
-    public long getTermID() {
+    public Long getTermID() {
         return termID;
     }
 
-    public void setTermID(long termID) {
+    public void setTermID(Long termID) {
         this.termID = termID;
     }
 }
