@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface AssessmentDao {
     @Insert
-    void insert(Assessment assessment);
+    long insert(Assessment assessment);
 
     @Update
     void update(Assessment assessment);

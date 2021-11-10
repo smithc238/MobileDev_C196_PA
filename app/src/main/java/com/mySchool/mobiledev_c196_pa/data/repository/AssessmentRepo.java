@@ -3,6 +3,7 @@ package com.mySchool.mobiledev_c196_pa.data.repository;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.dao.AssessmentDao;
 import com.mySchool.mobiledev_c196_pa.data.database.MySchoolDatabase;
@@ -14,15 +15,20 @@ import java.util.concurrent.ExecutorService;
 public class AssessmentRepo {
     private AssessmentDao assessmentDao;
     private final ExecutorService dbExecutor;
+    private MutableLiveData<Long> rowID;
 
     public AssessmentRepo(Application application) {
         MySchoolDatabase db = MySchoolDatabase.getInstance(application);
         assessmentDao = db.assessmentDao();
         dbExecutor = MySchoolExecutorService.getService();
+        rowID = new MutableLiveData<>();
     }
 
-    public void insert(Assessment assessment) {
-        dbExecutor.execute(() -> assessmentDao.insert(assessment));
+    public LiveData<Long> insert(Assessment assessment) {
+        dbExecutor.execute(() -> {
+            this.rowID.postValue(assessmentDao.insert(assessment));
+        });
+        return rowID;
     }
 
     public void update(Assessment assessment) {
