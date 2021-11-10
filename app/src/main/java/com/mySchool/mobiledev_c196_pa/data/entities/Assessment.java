@@ -3,16 +3,17 @@ package com.mySchool.mobiledev_c196_pa.data.entities;
 import static androidx.room.ForeignKey.CASCADE;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.time.ZonedDateTime;
 
 @Entity(tableName = "Assessments", foreignKeys = @ForeignKey(
         entity = Course.class, parentColumns = "courseID",
-        childColumns = "courseId", onDelete = CASCADE))
+        childColumns = "courseId", onDelete = CASCADE),
+        indices = @Index("courseId"))
 public class Assessment {
     @PrimaryKey(autoGenerate = true) private long id;
     @NonNull private String title;
@@ -20,7 +21,7 @@ public class Assessment {
     private ZonedDateTime end;
     private String description;
     @NonNull private ExamType type;
-    @ColumnInfo(index = true) private Long courseId;
+    private Long courseId;
 
     public Assessment(@NonNull String title, ZonedDateTime start, ZonedDateTime end, String description, @NonNull ExamType type, Long courseId) {
         this.title = title;
