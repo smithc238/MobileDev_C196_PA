@@ -77,7 +77,6 @@ public class AddEditTermFragment extends Fragment {
         end = v.findViewById(R.id.term_end);
         noCourses = v.findViewById(R.id.term_noCourses);
         addButton = v.findViewById(R.id.term_addCourse_button);
-        prepareFields();
         setAddCourseListener();
 
         RecyclerView recyclerView = v.findViewById(R.id.term_recycler_view);
@@ -115,13 +114,6 @@ public class AddEditTermFragment extends Fragment {
                     .commit();
         });
         return v;
-    }
-
-    private void prepareFields() {
-        start.setFocusable(true);
-        start.setFocusableInTouchMode(true);
-        end.setFocusable(true);
-        end.setFocusableInTouchMode(true);
     }
 
     private void setAddCourseListener() {

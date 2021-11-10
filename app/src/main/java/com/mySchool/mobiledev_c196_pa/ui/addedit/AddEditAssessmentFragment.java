@@ -65,7 +65,7 @@ public class AddEditAssessmentFragment extends Fragment {
         AddEditAssessmentFragment fragment = new AddEditAssessmentFragment();
         Bundle args = new Bundle();
         args.putLong(ASSESSMENT_ID, id);
-        args.putLong(COURSE_ID, courseId);
+        args.putString(COURSE_ID, String.valueOf(courseId));
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,15 +76,20 @@ public class AddEditAssessmentFragment extends Fragment {
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             id = getArguments().getLong(ASSESSMENT_ID);
-            courseId = getArguments().getLong(COURSE_ID);
+            String cID = getArguments().getString(COURSE_ID);
+            try {
+                courseId = Long.valueOf(cID);
+                if (courseId < 0) { courseId = null; }
+            } catch (NumberFormatException e) {
+                courseId = null;
+            }
             edit = id > 0;
             if (edit) {
                 getActivity().setTitle("Edit Assessment");
             } else {
-                //TODO: Test add assessment and delete new
                 getActivity().setTitle("Add Assessment");
             }
-            if (courseId < 0) { courseId = null; }
+
         }
     }
 
@@ -146,24 +151,33 @@ public class AddEditAssessmentFragment extends Fragment {
                 buildAssessment();
                 if (edit) {
                     assessmentViewModel.update(assessment);
+                    if (courseId == null) {
+                        assessmentViewModel.removeFromWorkingList(assessment);
+                        assessmentViewModel.addToWorkingList(assessment);
+                    }
                 } else {
-                    if (courseId == null) { assessmentViewModel.addToWorkingList(assessment); }
-                    assessmentViewModel.insert(assessment);
-
+                    long rowID = assessmentViewModel.insert(assessment);
+                    if (courseId == null) {
+                        assessment.setId(rowID);
+                        assessmentViewModel.addToWorkingList(assessment);
+                    }
                 }
-                nextScreen();
+                nextScreen(false);
                 return true;
             }
         } else if (option == R.id.menu_addedit_delete) {
             if (courseId == null) { assessmentViewModel.removeFromWorkingList(assessment); }
             if (edit) { assessmentViewModel.delete(assessment); }
-            nextScreen();
+            nextScreen(true);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private boolean formValidation() {
+        objective.setError(null);
+        start.setError(null);
+        end.setError(null);
         if (!FormValidators.nameValidation(title)) {
             title.setError("Please enter a title.");
         }
@@ -213,9 +227,16 @@ public class AddEditAssessmentFragment extends Fragment {
         }
     }
 
-    private void nextScreen() {
-        if (getParentFragmentManager().getBackStackEntryCount() == 0) {
+    private void nextScreen(boolean delete) {
+        int backStackCount = getParentFragmentManager().getBackStackEntryCount();
+        if (backStackCount == 0) {
             getActivity().finish();
+        } else if (backStackCount == 1 && edit && delete) {
+            getActivity().finish();
+        } else if (backStackCount > 1 && edit && delete) {
+            //Skips past Detail view
+            getParentFragmentManager().popBackStack();
+            getParentFragmentManager().popBackStack();
         } else {
             getParentFragmentManager().popBackStack();
         }

@@ -97,6 +97,7 @@ public class DetailedInstructorFragment extends Fragment {
                     .addToBackStack("DetailedInstructor")
                     .commit();
         } else if (id == R.id.menu_detail_delete) {
+            instructorViewModel.removeFromWorkingList(instructor);
             instructorViewModel.delete(instructor);
             nextScreen();
         }

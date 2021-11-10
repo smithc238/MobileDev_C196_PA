@@ -117,6 +117,8 @@ public class AddEditInstructorFragment extends Fragment {
                buildInstructor();
                if (edit) {
                    instructorViewModel.update(instructor);
+                   instructorViewModel.removeFromWorkingList(instructor);
+                   instructorViewModel.addToWorkingList(instructor);
                } else {
                    instructorViewModel.insert(instructor);
                }

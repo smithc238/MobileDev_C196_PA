@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +24,9 @@ import android.widget.TextView;
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.AssessmentListAdapter;
 import com.mySchool.mobiledev_c196_pa.adapters.InstructorsListAdapter;
+import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
+import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
 import com.mySchool.mobiledev_c196_pa.data.entities.Status;
 import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailedAssessmentFragment;
 import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailedInstructorFragment;
@@ -36,6 +39,7 @@ import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +57,8 @@ public class AddEditCourseFragment extends Fragment {
     private AssessmentViewModel assessmentViewModel;
     private CourseInstructorViewModel courseInstructorViewModel;
     private Course course;
+    private List<Instructor> courseInstructors;
+    private List<Assessment> courseAssessments;
     private EditText title;
     private EditText start;
     private EditText end;
@@ -131,6 +137,7 @@ public class AddEditCourseFragment extends Fragment {
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
         instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
         assessmentViewModel = new ViewModelProvider(requireActivity()).get(AssessmentViewModel.class);
+        courseInstructorViewModel = new ViewModelProvider(requireActivity()).get(CourseInstructorViewModel.class);
         // Set field values as appropriate with edit or add.
         if (edit) { //all methods that use the courseID
             courseViewModel.getCourseById(this.id).observe(getViewLifecycleOwner(), courses -> {
@@ -161,41 +168,73 @@ public class AddEditCourseFragment extends Fragment {
         instructorViewModel.getWorkingList().observe(getViewLifecycleOwner(), instructors -> {
             if (!instructors.isEmpty()) {
                 iAdapter.setInstructors(instructors);
+                courseInstructors = instructors;
                 noInstructors.setVisibility(View.GONE);
+            } else {
+                noInstructors.setVisibility(View.VISIBLE);
             }
         });
         assessmentViewModel.getWorkingList().observe(getViewLifecycleOwner(), assessments -> {
             if (!assessments.isEmpty()) {
                 aAdapter.setAssessments(assessments);
+                courseAssessments = assessments;
                 noAssessments.setVisibility(View.GONE);
+            } else {
+                noAssessments.setVisibility(View.VISIBLE);
             }
         });
         // RecyclerView adapter click listeners
-        iAdapter.setOnInstructorClickListener(instructor -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host, DetailedInstructorFragment.newInstance(instructor.getInstructorID()))
-                    .addToBackStack("AddEditCourse")
-                    .commit();
-        });
-        aAdapter.setOnAssessmentClickListener(assessment -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host, DetailedAssessmentFragment.newInstance(assessment.getId()))
-                    .addToBackStack("AddEditCourse")
-                    .commit();
-        });
+        iAdapter.setOnInstructorClickListener(instructor ->
+                getParentFragmentManager().beginTransaction()
+                .replace(R.id.detail_view_host, DetailedInstructorFragment.newInstance(instructor.getInstructorID()))
+                .addToBackStack("AddEditCourse")
+                .commit());
+        aAdapter.setOnAssessmentClickListener(assessment ->
+                getParentFragmentManager().beginTransaction()
+                .replace(R.id.detail_view_host, DetailedAssessmentFragment.newInstance(assessment.getId()))
+                .addToBackStack("AddEditCourse")
+                .commit());
         // Button click listeners
-        addInstructor.setOnClickListener(v1 -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host, AddInstructorFragment.newInstance(this.id))
-                    .addToBackStack("AddEditCourse")
-                    .commit();
-        });
-        addAssessment.setOnClickListener(v1 -> {
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host,AddEditAssessmentFragment.newInstance(-1,this.id))
-                    .addToBackStack("AddEditCourse")
-                    .commit();
-        });
+        addInstructor.setOnClickListener(v1 ->
+                getParentFragmentManager().beginTransaction()
+                .replace(R.id.detail_view_host, AddInstructorFragment.newInstance(this.id))
+                .addToBackStack("AddEditCourse")
+                .commit());
+        addAssessment.setOnClickListener(v1 ->
+                getParentFragmentManager().beginTransaction()
+                .replace(R.id.detail_view_host,AddEditAssessmentFragment.newInstance(-1,this.id))
+                .addToBackStack("AddEditCourse")
+                .commit());
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                instructorViewModel.removeFromWorkingList(iAdapter.getInstructorAt(viewHolder.getBindingAdapterPosition()));
+                if (courseInstructors.isEmpty()) { noInstructors.setVisibility(View.VISIBLE); }
+                iAdapter.notifyItemRemoved(viewHolder.getBindingAdapterPosition());
+            }
+        }).attachToRecyclerView(instructorRecycler);
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Assessment assessment = aAdapter.getAssessmentAt(viewHolder.getBindingAdapterPosition());
+                assessmentViewModel.removeFromWorkingList(assessment);
+                assessmentViewModel.delete(assessment);
+                if (courseAssessments.isEmpty()) { noAssessments.setVisibility(View.VISIBLE); }
+                aAdapter.notifyItemRemoved(viewHolder.getBindingAdapterPosition());
+            }
+        }).attachToRecyclerView(assessmentRecycler);
         return v;
     }
 
@@ -230,15 +269,19 @@ public class AddEditCourseFragment extends Fragment {
                 buildCourse();
                 if (edit) {
                     courseViewModel.update(course);
-                    //TODO update relationships by returning courseId;
+                    courseInstructorViewModel.removeAllCourseInstructors(this.id);
+                    courseInstructorViewModel.insertInstructorsForCourse(this.id, courseInstructors);
                 } else {
-                    courseViewModel.insert(course);
-                    //TODO insert relationships by returning courseID;
+                    this.id = courseViewModel.insert(course);
+                    courseInstructorViewModel.insertInstructorsForCourse(this.id,courseInstructors);
+                    assessmentViewModel.updateAssessmentFKeys(this.id, courseAssessments);
                 }
+                nextScreen(false);
             }
             return true;
         } else if (option == R.id.menu_addedit_delete) {
-            //TODO:Delete
+            if (edit) { courseViewModel.delete(this.course); }
+            nextScreen(true);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -255,6 +298,9 @@ public class AddEditCourseFragment extends Fragment {
     }
 
     private boolean formValidation() {
+        start.setError(null);
+        end.setError(null);
+        planToTake.setError(null);
         if (!FormValidators.nameValidation(title)) {
             title.setError("Please enter a title.");
         }
@@ -288,7 +334,10 @@ public class AddEditCourseFragment extends Fragment {
         ZonedDateTime newStart = DateTimeConv.stringToDateLocalWithoutTime(start.getText().toString());
         ZonedDateTime newEnd = DateTimeConv.stringToDateLocalWithoutTime(end.getText().toString());
         Status newStatus = getCourseStatus();
-        String newNote = note.getText().toString();
+        String newNote = null;
+        if (!note.getText().toString().trim().isEmpty()) {
+            newNote = note.getText().toString();
+        }
         if (!edit) {
             this.course = new Course(newTitle,newStatus,newStart,newEnd,newNote,this.termId);
         } else {
@@ -313,11 +362,25 @@ public class AddEditCourseFragment extends Fragment {
         }
     }
 
-    private void nextScreen() {
-        if (getParentFragmentManager().getBackStackEntryCount() == 0) {
+    private void nextScreen(boolean delete) {
+        int backStackCount = getParentFragmentManager().getBackStackEntryCount();
+        if (backStackCount == 0) {
             getActivity().finish();
+        } else if (backStackCount == 1 && edit && delete) {
+            getActivity().finish();
+        } else if (backStackCount > 1 && edit && delete) {
+            //Skips past Detail view
+            getParentFragmentManager().popBackStack();
+            getParentFragmentManager().popBackStack();
         } else {
             getParentFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        instructorViewModel.getWorkingList().getValue().clear();
+        assessmentViewModel.getWorkingList().getValue().clear();
     }
 }

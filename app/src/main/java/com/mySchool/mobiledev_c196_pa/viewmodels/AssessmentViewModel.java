@@ -25,15 +25,25 @@ public class AssessmentViewModel extends AndroidViewModel {
         workingList = new MutableLiveData<>(new ArrayList<>());
     }
 
-    public void insert(Assessment assessment) { repo.insert(assessment); }
+    public long insert(Assessment assessment) {
+        return repo.insert(assessment);
+    }
 
-    public void update(Assessment assessment) { repo.update(assessment); }
+    public void update(Assessment assessment) {
+        repo.update(assessment);
+    }
 
-    public void delete(Assessment assessment) { repo.delete(assessment); }
+    public void delete(Assessment assessment) {
+        repo.delete(assessment);
+    }
 
-    public void deleteAllAssessments() { repo.deleteAllAssessments(); }
+    public void deleteAllAssessments() {
+        repo.deleteAllAssessments();
+    }
 
-    public LiveData<List<Assessment>> getAllAssessments() { return allAssessments; }
+    public LiveData<List<Assessment>> getAllAssessments() {
+        return allAssessments;
+    }
 
     public LiveData<List<Assessment>> getAssessmentById(long id) {
         return repo.getAssessmentById(id);
@@ -48,15 +58,17 @@ public class AssessmentViewModel extends AndroidViewModel {
     }
 
     public void removeFromWorkingList(Assessment assessment) {
-        workingList.getValue().remove(assessment);
+        //Adjusted to match instructor
+        workingList.getValue().removeIf(item ->
+                item.getId() == assessment.getId());
     }
 
     public LiveData<List<Assessment>> getWorkingList() {
         return workingList;
     }
 
-    public void updateWorkingFKsAndSumbit(Long id) {
-        for (Assessment assessment: workingList.getValue() ) {
+    public void updateAssessmentFKeys(Long id, List<Assessment> assessments) {
+        for (Assessment assessment: assessments ) {
             assessment.setCourseId(id);
             update(assessment);
         }

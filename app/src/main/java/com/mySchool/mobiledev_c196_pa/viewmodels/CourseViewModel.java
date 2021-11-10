@@ -23,7 +23,7 @@ public class CourseViewModel extends AndroidViewModel {
         allCourses = repo.getAllCourses();
     }
 
-    public LiveData<Long> insert(Course course) {
+    public long insert(Course course) {
         return repo.insert(course);
     }
 

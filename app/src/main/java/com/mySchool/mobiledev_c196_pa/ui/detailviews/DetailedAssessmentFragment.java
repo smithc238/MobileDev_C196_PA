@@ -138,6 +138,7 @@ public class DetailedAssessmentFragment extends Fragment {
                     .addToBackStack("DetailedAssessment")
                     .commit();
         } else if (id == R.id.menu_detail_delete) {
+            assessmentViewModel.removeFromWorkingList(this.assessment);
             assessmentViewModel.delete(this.assessment);
             nextScreen();
         }
