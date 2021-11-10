@@ -77,19 +77,13 @@ public class AddEditAssessmentFragment extends Fragment {
         if (getArguments() != null) {
             id = getArguments().getLong(ASSESSMENT_ID);
             String cID = getArguments().getString(COURSE_ID);
+            edit = id > 0;
             try {
                 courseId = Long.valueOf(cID);
                 if (courseId < 0) { courseId = null; }
             } catch (NumberFormatException e) {
                 courseId = null;
             }
-            edit = id > 0;
-            if (edit) {
-                getActivity().setTitle("Edit Assessment");
-            } else {
-                getActivity().setTitle("Add Assessment");
-            }
-
         }
     }
 
@@ -97,7 +91,13 @@ public class AddEditAssessmentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_assessment, container, false);
-        prepareFields(v);
+        title = v.findViewById(R.id.assessment_title);
+        radioGroup = v.findViewById(R.id.assessment_type_radioGroup);
+        objective = v.findViewById(R.id.assessment_type_objective_radio);
+        performance = v.findViewById(R.id.assessment_type_performance_radio);
+        start = v.findViewById(R.id.assessment_start);
+        end = v.findViewById(R.id.assessment_end);
+        description = v.findViewById(R.id.assessment_description);
         assessmentViewModel = new ViewModelProvider(requireActivity()).get(AssessmentViewModel.class);
         if (edit) {
             assessmentViewModel.getAssessmentById(this.id).observe(getViewLifecycleOwner(),assessments -> {
@@ -119,21 +119,21 @@ public class AddEditAssessmentFragment extends Fragment {
         return v;
     }
 
-    private void prepareFields(View v) {
-        title = v.findViewById(R.id.assessment_title);
-        radioGroup = v.findViewById(R.id.assessment_type_radioGroup);
-        objective = v.findViewById(R.id.assessment_type_objective_radio);
-        performance = v.findViewById(R.id.assessment_type_performance_radio);
-        start = v.findViewById(R.id.assessment_start);
-        end = v.findViewById(R.id.assessment_end);
-        description = v.findViewById(R.id.assessment_description);
-    }
-
     private void selectExamType(ExamType examType) {
         if (examType == ExamType.OBJECTIVE) {
             objective.toggle();
         } else {
             performance.toggle();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (edit) {
+            getActivity().setTitle("Edit Assessment");
+        } else {
+            getActivity().setTitle("Add Assessment");
         }
     }
 
@@ -151,23 +151,20 @@ public class AddEditAssessmentFragment extends Fragment {
                 buildAssessment();
                 if (edit) {
                     assessmentViewModel.update(assessment);
-                    if (courseId == null) {
-                        assessmentViewModel.removeFromWorkingList(assessment);
-                        assessmentViewModel.addToWorkingList(assessment);
-                    }
+                    assessmentViewModel.removeFromWorkingList(assessment);
                 } else {
                     long rowID = assessmentViewModel.insert(assessment);
-                    if (courseId == null) {
-                        assessment.setId(rowID);
-                        assessmentViewModel.addToWorkingList(assessment);
-                    }
+                    assessment.setId(rowID);
                 }
+                assessmentViewModel.addToWorkingList(assessment);
                 nextScreen(false);
                 return true;
             }
         } else if (option == R.id.menu_addedit_delete) {
-            if (courseId == null) { assessmentViewModel.removeFromWorkingList(assessment); }
-            if (edit) { assessmentViewModel.delete(assessment); }
+            if (edit) {
+                assessmentViewModel.delete(assessment);
+                assessmentViewModel.removeFromWorkingList(assessment);
+            }
             nextScreen(true);
             return true;
         }
