@@ -3,31 +3,36 @@ package com.mySchool.mobiledev_c196_pa.data.repository;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.mySchool.mobiledev_c196_pa.data.dao.AssessmentDao;
 import com.mySchool.mobiledev_c196_pa.data.database.MySchoolDatabase;
 import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class AssessmentRepo {
     private AssessmentDao assessmentDao;
     private final ExecutorService dbExecutor;
-    private MutableLiveData<Long> rowID;
 
     public AssessmentRepo(Application application) {
         MySchoolDatabase db = MySchoolDatabase.getInstance(application);
         assessmentDao = db.assessmentDao();
         dbExecutor = MySchoolExecutorService.getService();
-        rowID = new MutableLiveData<>();
     }
 
-    public LiveData<Long> insert(Assessment assessment) {
-        dbExecutor.execute(() -> {
-            this.rowID.postValue(assessmentDao.insert(assessment));
-        });
+    public long insert(Assessment assessment) {
+        long rowID = 0;
+        Callable<Long> insertCallable = () -> assessmentDao.insert(assessment);
+        Future<Long> future = dbExecutor.submit(insertCallable);
+        try {
+            rowID = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
         return rowID;
     }
 
