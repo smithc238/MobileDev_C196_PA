@@ -75,6 +75,7 @@ public class CourseViewModel extends AndroidViewModel {
     public void updateFKs(long termId, List<Course> courses) {
         for (Course course : courses) {
             course.setTermID(termId);
+            update(course);
         }
     }
 

@@ -81,8 +81,6 @@ public class AddEditTermFragment extends Fragment {
             id = getArguments().getLong(TERM_ID);
             edit = id > 0;
         }
-        //TODO remove working courses on backpressed when not saved.
-        //TODO same might be for assessments.
     }
 
     @Override
@@ -186,9 +184,8 @@ public class AddEditTermFragment extends Fragment {
                 if (edit) {
                     termViewModel.update(this.term);
                 } else {
-                    //TODO Course FK did not update.
-                    this.id = termViewModel.insert(this.term);
-                    courseViewModel.updateFKs(this.id, termCourses);
+                    long rowID = termViewModel.insert(this.term);
+                    courseViewModel.updateFKs(rowID, termCourses);
                 }
                 nextScreen(false);
                 return true;

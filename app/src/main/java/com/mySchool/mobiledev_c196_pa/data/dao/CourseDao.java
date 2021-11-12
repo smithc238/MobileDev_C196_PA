@@ -40,4 +40,7 @@ public interface CourseDao {
 
     @Query("SELECT * FROM assessments WHERE courseId = :id")
     LiveData<List<Assessment>> getAssociatedAssessments(long id);
+
+    @Query("DELETE FROM courses WHERE termID IS Null")
+    void cleanCourses();
 }
