@@ -87,6 +87,7 @@ public class DetailedInstructorFragment extends Fragment {
         inflater.inflate(R.menu.detail_menu, menu);
         menu.removeItem(R.id.menu_detail_setNotification);
         menu.removeItem(R.id.menu_detail_cancelNotification);
+        menu.removeItem(R.id.menu_detail_share);
     }
 
     @Override

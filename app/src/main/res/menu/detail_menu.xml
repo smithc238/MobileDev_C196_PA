@@ -27,6 +27,12 @@
     </group>
 
     <item
+        android:id="@+id/menu_detail_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/menu_detail_delete"
         android:icon="@drawable/ic_delete_forever"
         android:title="@string/delete_item"

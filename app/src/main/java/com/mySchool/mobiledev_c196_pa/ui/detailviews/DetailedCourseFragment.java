@@ -3,6 +3,7 @@ package com.mySchool.mobiledev_c196_pa.ui.detailviews;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -209,19 +210,15 @@ public class DetailedCourseFragment extends Fragment {
                     .addToBackStack("DetailedCourse")
                     .commit();
             return true;
-        } else if (option == R.id.menu_detail_delete) {
-            courseViewModel.delete(course);
-            nextScreen();
-            return true;
         } else if (option == R.id.menu_detail_setNotification) {
             Toast.makeText(getActivity(), "Reminder Set", Toast.LENGTH_SHORT).show();
             AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-            PendingIntent beginning = AppNotifications.pendingIntentLoader(getActivity(),1,
+            PendingIntent beginning = AppNotifications.pendingIntentLoader(getActivity(), 1,
                     course.getTitle() + " begins today", (int) course.getCourseID(), false);
-            PendingIntent ending = AppNotifications.pendingIntentLoader(getActivity(),1,
+            PendingIntent ending = AppNotifications.pendingIntentLoader(getActivity(), 1,
                     course.getTitle() + " ends today.", (int) course.getCourseID(), true);
-            long trigger = course.getStart().toEpochSecond()*1000;
-            long trigger2 = course.getEnd().toEpochSecond()*1000;
+            long trigger = course.getStart().toEpochSecond() * 1000;
+            long trigger2 = course.getEnd().toEpochSecond() * 1000;
             alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, beginning);
             alarmManager.set(AlarmManager.RTC_WAKEUP, trigger2, ending);
             alarmIsOn = true;
@@ -230,9 +227,9 @@ public class DetailedCourseFragment extends Fragment {
         } else if (option == R.id.menu_detail_cancelNotification) {
             Toast.makeText(getActivity(), "Reminder Canceled", Toast.LENGTH_SHORT).show();
             AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-            PendingIntent beginning = AppNotifications.pendingIntentLoader(getActivity(),1,
+            PendingIntent beginning = AppNotifications.pendingIntentLoader(getActivity(), 1,
                     course.getTitle() + " begins today", (int) course.getCourseID(), false);
-            PendingIntent ending = AppNotifications.pendingIntentLoader(getActivity(),1,
+            PendingIntent ending = AppNotifications.pendingIntentLoader(getActivity(), 1,
                     course.getTitle() + " ends today.", (int) course.getCourseID(), true);
             alarmManager.cancel(beginning);
             alarmManager.cancel(ending);
@@ -241,8 +238,24 @@ public class DetailedCourseFragment extends Fragment {
             alarmIsOn = false;
             setBellIcon();
             return true;
+        } else if (option == R.id.menu_detail_share) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TITLE, course.getTitle());
+            intent.putExtra(Intent.EXTRA_TEXT, course.getTitle()+":\n"+course.getNote());
+            intent.setType("text/plain");
+            Intent shareIntent = Intent.createChooser(intent, "Share Course Note");
+            startActivity(shareIntent);
+            return true;
+        } else if (option == R.id.menu_detail_delete) {
+            courseViewModel.delete(course);
+            nextScreen();
+            return true;
         }
-        return super.onOptionsItemSelected(item);
+        return super.
+
+                onOptionsItemSelected(item);
+
     }
 
     private void nextScreen() {
@@ -254,7 +267,7 @@ public class DetailedCourseFragment extends Fragment {
     }
 
     private void checkAlarm(Course course) {
-        this.alarmIsOn = AppNotifications.checkPendingIntent(getActivity(),1,
+        this.alarmIsOn = AppNotifications.checkPendingIntent(getActivity(), 1,
                 course.getTitle() + " ends today.",
                 (int) course.getCourseID(), true);
         setBellIcon();
