@@ -1,5 +1,8 @@
 package com.mySchool.mobiledev_c196_pa.ui.detailviews;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,11 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.data.entities.Assessment;
 import com.mySchool.mobiledev_c196_pa.data.entities.ExamType;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditAssessmentFragment;
+import com.mySchool.mobiledev_c196_pa.utilities.AppNotifications;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.viewmodels.AssessmentViewModel;
 
@@ -38,6 +43,8 @@ public class DetailedAssessmentFragment extends Fragment {
     private EditText start;
     private EditText end;
     private EditText description;
+    private boolean alarmIsOn;
+    private Menu menu;
 
     /**
      * Required empty public constructor
@@ -69,6 +76,13 @@ public class DetailedAssessmentFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.detail_menu,menu);
+        this.menu = menu;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_assessment, container, false);
@@ -82,9 +96,16 @@ public class DetailedAssessmentFragment extends Fragment {
                 end.setText(DateTimeConv.dateToStringLocal(assessments.get(0).getEnd()));
                 description.setText(assessments.get(0).getDescription());
                 this.assessment = assessments.get(0);
+                checkAlarm(assessments.get(0));
             }
         });
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Assessment Details");
     }
 
     private void prepareFields(View v) {
@@ -117,30 +138,50 @@ public class DetailedAssessmentFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle("Assessment Details");
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.detail_menu,menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_detail_edit) {
+        int option = item.getItemId();
+        if (option == R.id.menu_detail_edit) {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.detail_view_host,
                             AddEditAssessmentFragment.newInstance(this.id,this.assessment.getCourseId()))
                     .addToBackStack("DetailedAssessment")
                     .commit();
-        } else if (id == R.id.menu_detail_delete) {
+        } else if (option == R.id.menu_detail_delete) {
             assessmentViewModel.removeFromWorkingList(this.assessment);
             assessmentViewModel.delete(this.assessment);
             nextScreen();
+        } else if (option == R.id.menu_detail_setNotification) {
+            Toast.makeText(getActivity(), "Reminder Set", Toast.LENGTH_SHORT).show();
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            PendingIntent beginning = AppNotifications.pendingIntentLoader(getActivity(),
+                    2, assessment.getTitle() + " begins today.",
+                    (int) assessment.getId(), false);
+            PendingIntent ending = AppNotifications.pendingIntentLoader(getActivity(),
+                    2,assessment.getTitle() + " ends today.",
+                    (int) assessment.getId(), true);
+            long beginTrigger = assessment.getStart().toEpochSecond()*1000;
+            long endTrigger = assessment.getEnd().toEpochSecond()*1000;
+            alarmManager.set(AlarmManager.RTC_WAKEUP, beginTrigger, beginning);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, endTrigger, ending);
+            alarmIsOn = true;
+            setBellIcon();
+            return true;
+        } else if (option == R.id.menu_detail_cancelNotification) {
+            Toast.makeText(getActivity(), "Reminder Canceled", Toast.LENGTH_SHORT).show();
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            PendingIntent beginning = AppNotifications.pendingIntentLoader(getActivity(),
+                    2, assessment.getTitle() + " begins today.",
+                    (int) assessment.getId(), false);
+            PendingIntent ending = AppNotifications.pendingIntentLoader(getActivity(),
+                    2,assessment.getTitle() + " ends today.",
+                    (int) assessment.getId(), true);
+            alarmManager.cancel(beginning);
+            alarmManager.cancel(ending);
+            beginning.cancel();
+            ending.cancel();
+            alarmIsOn = false;
+            setBellIcon();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -150,6 +191,25 @@ public class DetailedAssessmentFragment extends Fragment {
             getActivity().finish();
         } else {
             getParentFragmentManager().popBackStack();
+        }
+    }
+
+    private void checkAlarm(Assessment assessment) {
+        this.alarmIsOn = AppNotifications.checkPendingIntent(getActivity(),
+                2,assessment.getTitle() + " ends today.",
+                (int) assessment.getId(), true);
+        setBellIcon();
+    }
+
+    private void setBellIcon() {
+        MenuItem off = menu.findItem(R.id.menu_detail_setNotification);
+        MenuItem on = menu.findItem(R.id.menu_detail_cancelNotification);
+        if (alarmIsOn) {
+            off.setVisible(false);
+            on.setVisible(true);
+        } else {
+            off.setVisible(true);
+            on.setVisible(false);
         }
     }
 }

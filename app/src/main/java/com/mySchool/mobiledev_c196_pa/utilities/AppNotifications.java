@@ -15,8 +15,8 @@ import com.mySchool.mobiledev_c196_pa.R;
 public class AppNotifications extends BroadcastReceiver {
     private static final String CHANNEL = "Channel";
     private static final String TEXT = "Text";
-    private static final String COURSE_CHANNEL = "Course";
-    private static final String ASSESSMENT_CHANNEL = "Assessment";
+    private static final String COURSE_CHANNEL = "Course Reminder";
+    private static final String ASSESSMENT_CHANNEL = "Assessment Reminder";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -30,7 +30,7 @@ public class AppNotifications extends BroadcastReceiver {
         }
         Notification n = new NotificationCompat.Builder(context, channel)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Notification Test")
+                .setContentTitle(channel)
                 .setContentText(intent.getStringExtra(TEXT))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build();
@@ -55,15 +55,22 @@ public class AppNotifications extends BroadcastReceiver {
 
     /**
      * Set an Alarm notification using this static method.
+     *
      * @param context context.
      * @param type 1 = Course & 2 = Assessment.
      * @param text Text to appear in notification.
+     * @param id The object rowID.
+     * @param end false if beginning, true if end.
      */
-    public static PendingIntent pendingIntentLoader(Context context, int type, String text, int id) {
+    public static PendingIntent pendingIntentLoader(Context context, int type, String text, int id, boolean end) {
+        int separator = (end)? 1 : 0;
         Intent intent = new Intent(context, AppNotifications.class);
         intent.putExtra(CHANNEL, type);
         intent.putExtra(TEXT, text);
-        return PendingIntent.getBroadcast(context, Integer.parseInt(type+""+id),intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        // Ensure each PendingIntent has a unique request code.
+        return PendingIntent.getBroadcast( context,
+                Integer.parseInt(type+""+id+""+separator),intent,
+                PendingIntent.FLAG_ONE_SHOT);
     }
     /**
      * To check if broadcast was already created.
@@ -71,12 +78,17 @@ public class AppNotifications extends BroadcastReceiver {
      * @param context context.
      * @param type 1 = Course & 2 = Assessment.
      * @param text Text to appear in notification.
+     * @param id The object rowID.
+     * @param end false if beginning, true if end.
      */
-    public static boolean checkPendingIntent(Context context, int type, String text, int id) {
+    public static boolean checkPendingIntent(Context context, int type, String text, int id, boolean end) {
+        int separator = (end)? 1 : 0;
         Intent intent = new Intent(context, AppNotifications.class);
         intent.putExtra(CHANNEL, type);
         intent.putExtra(TEXT, text);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(type+""+id),intent,PendingIntent.FLAG_NO_CREATE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context, Integer.parseInt(type+""+id+""+separator),intent,
+                PendingIntent.FLAG_NO_CREATE + PendingIntent.FLAG_ONE_SHOT);
         return pendingIntent != null;
     }
 }

@@ -33,6 +33,7 @@ import com.mySchool.mobiledev_c196_pa.utilities.AppNotifications;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -89,6 +90,13 @@ public class DetailedCourseFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.detail_menu, menu);
+        this.menu = menu;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course, container, false);
@@ -141,6 +149,12 @@ public class DetailedCourseFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Course Details");
+    }
+
     private void prepareFields(View v) {
         title = v.findViewById(R.id.course_title);
         start = v.findViewById(R.id.course_start);
@@ -186,25 +200,6 @@ public class DetailedCourseFragment extends Fragment {
         }
     }
 
-    private void checkAlarm(Course course) {
-        this.alarmIsOn = AppNotifications.checkPendingIntent(getActivity(),1, course.getTitle() + "reminder", (int) course.getCourseID());
-        setBellIcon();
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setTitle("Course Details");
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.detail_menu, menu);
-        this.menu = menu;
-    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int option = item.getItemId();
@@ -219,27 +214,50 @@ public class DetailedCourseFragment extends Fragment {
             nextScreen();
             return true;
         } else if (option == R.id.menu_detail_setNotification) {
-            Toast.makeText(getActivity(), "Alarm Set", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Reminder Set", Toast.LENGTH_SHORT).show();
             AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-            PendingIntent pendingIntent = AppNotifications.pendingIntentLoader(getActivity(), 1,
-                    course.getTitle() + " reminder", (int) course.getCourseID());
-            long trigger = System.currentTimeMillis() + (1000 * 5);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+            PendingIntent beginning = AppNotifications.pendingIntentLoader(getActivity(),1,
+                    course.getTitle() + " begins today", (int) course.getCourseID(), false);
+            PendingIntent ending = AppNotifications.pendingIntentLoader(getActivity(),1,
+                    course.getTitle() + " ends today.", (int) course.getCourseID(), true);
+            long trigger = course.getStart().toEpochSecond()*1000;
+            long trigger2 = course.getEnd().toEpochSecond()*1000;
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, beginning);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger2, ending);
             alarmIsOn = true;
             setBellIcon();
             return true;
         } else if (option == R.id.menu_detail_cancelNotification) {
-            Toast.makeText(getActivity(), "Alarm Canceled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Reminder Canceled", Toast.LENGTH_SHORT).show();
             AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-            PendingIntent pendingIntent = AppNotifications.pendingIntentLoader(getActivity(), 1,
-                    course.getTitle() + " reminder", (int) course.getCourseID());
-            alarmManager.cancel(pendingIntent);
-            pendingIntent.cancel();
+            PendingIntent beginning = AppNotifications.pendingIntentLoader(getActivity(),1,
+                    course.getTitle() + " begins today", (int) course.getCourseID(), false);
+            PendingIntent ending = AppNotifications.pendingIntentLoader(getActivity(),1,
+                    course.getTitle() + " ends today.", (int) course.getCourseID(), true);
+            alarmManager.cancel(beginning);
+            alarmManager.cancel(ending);
+            beginning.cancel();
+            ending.cancel();
             alarmIsOn = false;
             setBellIcon();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void nextScreen() {
+        if (getParentFragmentManager().getBackStackEntryCount() == 0) {
+            getActivity().finish();
+        } else {
+            getParentFragmentManager().popBackStack();
+        }
+    }
+
+    private void checkAlarm(Course course) {
+        this.alarmIsOn = AppNotifications.checkPendingIntent(getActivity(),1,
+                course.getTitle() + " ends today.",
+                (int) course.getCourseID(), true);
+        setBellIcon();
     }
 
     private void setBellIcon() {
@@ -251,14 +269,6 @@ public class DetailedCourseFragment extends Fragment {
         } else {
             off.setVisible(true);
             on.setVisible(false);
-        }
-    }
-
-    private void nextScreen() {
-        if (getParentFragmentManager().getBackStackEntryCount() == 0) {
-            getActivity().finish();
-        } else {
-            getParentFragmentManager().popBackStack();
         }
     }
 }
