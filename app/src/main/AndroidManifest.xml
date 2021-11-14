@@ -9,13 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MySchool">
+        <receiver
+            android:name=".utilities.AppNotifications"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".ui.detailviews.DetailActivity"
             android:exported="false"
-            android:parentActivityName=".ui.listviews.ListActivity"/>
+            android:parentActivityName=".ui.listviews.ListActivity" />
         <activity
             android:name=".ui.listviews.ListActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"

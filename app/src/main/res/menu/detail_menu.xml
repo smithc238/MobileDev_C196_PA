@@ -8,9 +8,27 @@
         android:title="@string/edit_item"
         app:showAsAction="ifRoom" />
 
+    <group
+        android:id="@+id/menu_detail_notifications"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menu_detail_setNotification"
+            android:icon="@drawable/ic_notification_off"
+            android:title="@string/set_reminder"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/menu_detail_cancelNotification"
+            android:icon="@drawable/ic_notification_active"
+            android:title="@string/cancel_reminder"
+            android:visible="false"
+            app:showAsAction="ifRoom" />
+    </group>
+
     <item
         android:id="@+id/menu_detail_delete"
         android:icon="@drawable/ic_delete_forever"
         android:title="@string/delete_item"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

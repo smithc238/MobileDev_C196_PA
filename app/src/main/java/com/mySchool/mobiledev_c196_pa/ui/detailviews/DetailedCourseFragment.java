@@ -1,10 +1,12 @@
 package com.mySchool.mobiledev_c196_pa.ui.detailviews;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,14 +21,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.AssessmentListAdapter;
 import com.mySchool.mobiledev_c196_pa.adapters.InstructorsListAdapter;
 import com.mySchool.mobiledev_c196_pa.data.entities.Course;
-import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
 import com.mySchool.mobiledev_c196_pa.data.entities.Status;
 import com.mySchool.mobiledev_c196_pa.ui.addedit.AddEditCourseFragment;
+import com.mySchool.mobiledev_c196_pa.utilities.AppNotifications;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 
@@ -51,12 +54,15 @@ public class DetailedCourseFragment extends Fragment {
     private RadioButton dropped;
     private TextView noteHeader;
     private EditText note;
+    private boolean alarmIsOn;
+    private Menu menu;
 
 
     /**
      * Required empty public constructor.
      */
-    public DetailedCourseFragment() {}
+    public DetailedCourseFragment() {
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -111,23 +117,24 @@ public class DetailedCourseFragment extends Fragment {
                     note.setVisibility(View.GONE);
                     noteHeader.setVisibility(View.GONE);
                 }
+                checkAlarm(course.get(0));
             }
         });
         courseViewModel.getAssociatedInstructors(this.id).observe(getViewLifecycleOwner(), iAdapter::setInstructors);
-        courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(),assessments -> {
+        courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(), assessments -> {
             if (!assessments.isEmpty()) {
                 aAdapter.setAssessments(assessments);
             }
         });
         iAdapter.setOnInstructorClickListener(instructor -> {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host,DetailedInstructorFragment.newInstance(instructor.getInstructorID()))
+                    .replace(R.id.detail_view_host, DetailedInstructorFragment.newInstance(instructor.getInstructorID()))
                     .addToBackStack("DetailedCourse")
                     .commit();
         });
         aAdapter.setOnAssessmentClickListener(assessment -> {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host,DetailedAssessmentFragment.newInstance(assessment.getId()))
+                    .replace(R.id.detail_view_host, DetailedAssessmentFragment.newInstance(assessment.getId()))
                     .addToBackStack("DetailedCourse")
                     .commit();
         });
@@ -179,6 +186,12 @@ public class DetailedCourseFragment extends Fragment {
         }
     }
 
+    private void checkAlarm(Course course) {
+        this.alarmIsOn = AppNotifications.checkPendingIntent(getActivity(),1, course.getTitle() + "reminder", (int) course.getCourseID());
+        setBellIcon();
+    }
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -188,7 +201,8 @@ public class DetailedCourseFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.detail_menu,menu);
+        inflater.inflate(R.menu.detail_menu, menu);
+        this.menu = menu;
     }
 
     @Override
@@ -196,7 +210,7 @@ public class DetailedCourseFragment extends Fragment {
         int option = item.getItemId();
         if (option == R.id.menu_detail_edit) {
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.detail_view_host, AddEditCourseFragment.newInstance(this.id,this.course.getTermID()))
+                    .replace(R.id.detail_view_host, AddEditCourseFragment.newInstance(this.id, this.course.getTermID()))
                     .addToBackStack("DetailedCourse")
                     .commit();
             return true;
@@ -204,8 +218,40 @@ public class DetailedCourseFragment extends Fragment {
             courseViewModel.delete(course);
             nextScreen();
             return true;
+        } else if (option == R.id.menu_detail_setNotification) {
+            Toast.makeText(getActivity(), "Alarm Set", Toast.LENGTH_SHORT).show();
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pendingIntent = AppNotifications.pendingIntentLoader(getActivity(), 1,
+                    course.getTitle() + " reminder", (int) course.getCourseID());
+            long trigger = System.currentTimeMillis() + (1000 * 5);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+            alarmIsOn = true;
+            setBellIcon();
+            return true;
+        } else if (option == R.id.menu_detail_cancelNotification) {
+            Toast.makeText(getActivity(), "Alarm Canceled", Toast.LENGTH_SHORT).show();
+            AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pendingIntent = AppNotifications.pendingIntentLoader(getActivity(), 1,
+                    course.getTitle() + " reminder", (int) course.getCourseID());
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+            alarmIsOn = false;
+            setBellIcon();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setBellIcon() {
+        MenuItem off = menu.findItem(R.id.menu_detail_setNotification);
+        MenuItem on = menu.findItem(R.id.menu_detail_cancelNotification);
+        if (alarmIsOn) {
+            off.setVisible(false);
+            on.setVisible(true);
+        } else {
+            off.setVisible(true);
+            on.setVisible(false);
+        }
     }
 
     private void nextScreen() {

@@ -113,6 +113,8 @@ public class DetailedTermFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.detail_menu, menu);
+        menu.removeItem(R.id.menu_detail_setNotification);
+        menu.removeItem(R.id.menu_detail_cancelNotification);
     }
 
     @Override
