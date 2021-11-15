@@ -57,7 +57,6 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Co
         private TextView textViewStart;
         private TextView textViewEnd;
         private TextView textViewStatus;
-        private TextView textViewAssessment;
         private TextView textViewNote;
 
         public CourseHolder(@NonNull View itemView) {
@@ -66,7 +65,6 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Co
             textViewStart = itemView.findViewById(R.id.course_item_start);
             textViewEnd = itemView.findViewById(R.id.course_item_end);
             textViewStatus = itemView.findViewById(R.id.course_item_status);
-            textViewAssessment = itemView.findViewById(R.id.course_item_assessment_header);
             textViewNote = itemView.findViewById(R.id.course_item_note_body);
 
             itemView.setOnClickListener(v -> {
