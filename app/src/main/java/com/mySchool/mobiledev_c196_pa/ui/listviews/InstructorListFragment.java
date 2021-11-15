@@ -47,7 +47,6 @@ public class InstructorListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().setTitle("Instructors");
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             id = getArguments().getLong(INSTRUCTOR_ID);
@@ -63,12 +62,10 @@ public class InstructorListFragment extends Fragment {
         InstructorsListAdapter adapter = new InstructorsListAdapter(v.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-
-        instructorViewModel = new ViewModelProvider(this).get(InstructorViewModel.class);
+        instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
         instructorViewModel.getAllInstructors().observe(getViewLifecycleOwner(), instructors -> {
             adapter.setInstructors(instructors);
         });
-
         adapter.setOnInstructorClickListener(instructor -> {
             Intent intent = DetailActivity.intentLoader(
                     getActivity(), 4,  instructor.getInstructorID());
@@ -78,9 +75,9 @@ public class InstructorListFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.list_menu, menu);
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Instructors");
     }
 
     @Override

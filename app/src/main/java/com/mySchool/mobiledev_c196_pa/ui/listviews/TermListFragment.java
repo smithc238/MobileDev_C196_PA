@@ -32,7 +32,6 @@ public class TermListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        getActivity().setTitle("My Terms");
     }
 
     @Override
@@ -41,14 +40,11 @@ public class TermListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_list_view, container, false);
         RecyclerView recyclerView = v.findViewById(R.id.list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         TermListAdapter adapter = new TermListAdapter(v.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-
-        termViewModel = new ViewModelProvider(this).get(TermViewModel.class);
+        termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
         termViewModel.getAllTerms().observe(getViewLifecycleOwner(), adapter::setTerms);
-
         adapter.setOnTermClickListener(term -> {
             Intent intent = DetailActivity.intentLoader(
                     getActivity(),1,term.getId());
@@ -58,9 +54,9 @@ public class TermListFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.list_menu,menu);
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("My Terms");
     }
 
     @Override

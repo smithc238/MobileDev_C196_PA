@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.mySchool.mobiledev_c196_pa.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass. Not Used.
  * Use the {@link AssessmentListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */

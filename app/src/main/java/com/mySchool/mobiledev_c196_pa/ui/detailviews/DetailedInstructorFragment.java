@@ -57,10 +57,18 @@ public class DetailedInstructorFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        getActivity().setTitle("Instructor Details");
         if (getArguments() != null) {
             id = getArguments().getLong(ID);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.detail_menu, menu);
+        menu.removeItem(R.id.menu_detail_setNotification);
+        menu.removeItem(R.id.menu_detail_cancelNotification);
+        menu.removeItem(R.id.menu_detail_share);
     }
 
     @Override
@@ -82,12 +90,9 @@ public class DetailedInstructorFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.detail_menu, menu);
-        menu.removeItem(R.id.menu_detail_setNotification);
-        menu.removeItem(R.id.menu_detail_cancelNotification);
-        menu.removeItem(R.id.menu_detail_share);
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Instructor Details");
     }
 
     @Override

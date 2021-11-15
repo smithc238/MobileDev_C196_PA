@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
@@ -23,23 +24,26 @@ public class ListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
-
         drawerLayout = findViewById(R.id.nav_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
                     .add(R.id.list_view_host,new TermListFragment())
                     .commit();
             navigationView.setCheckedItem(R.id.nav_myTermsList);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.list_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -52,7 +56,6 @@ public class ListActivity extends AppCompatActivity implements
         } else if (id == R.id.nav_instructorList) {
             fragmentManager.beginTransaction()
                     .replace(R.id.list_view_host,new InstructorListFragment())
-                    .addToBackStack(null)
                     .commit();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
