@@ -88,6 +88,12 @@ public class AddEditAssessmentFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.add_edit_menu,menu);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_assessment, container, false);
@@ -99,23 +105,35 @@ public class AddEditAssessmentFragment extends Fragment {
         end = v.findViewById(R.id.assessment_end);
         description = v.findViewById(R.id.assessment_description);
         assessmentViewModel = new ViewModelProvider(requireActivity()).get(AssessmentViewModel.class);
-        if (edit) {
-            assessmentViewModel.getAssessmentById(this.id).observe(getViewLifecycleOwner(),assessments -> {
+        if (savedInstanceState != null) {
+            title.setText(savedInstanceState.getString("title"));
+            start.setText(savedInstanceState.getString("start"));
+            end.setText(savedInstanceState.getString("end"));
+            description.setText(savedInstanceState.getString("desc"));
+            selectExamType(ExamType.values()[savedInstanceState.getInt("type")]);
+            DateFormFiller.dateOnClickDatePicker(start,null);
+            DateFormFiller.dateOnClickDatePicker(end,null);
+        } else if (edit) {
+            assessmentViewModel.getAssessmentById(this.id).observe(getViewLifecycleOwner(), assessments -> {
                 if (!assessments.isEmpty()) {
                     title.setText(assessments.get(0).getTitle());
                     selectExamType(assessments.get(0).getType());
                     start.setText(DateTimeConv.dateToStringLocal(assessments.get(0).getStart()));
                     end.setText(DateTimeConv.dateToStringLocal(assessments.get(0).getEnd()));
-                    DateFormFiller.dateOnClickDatePicker(start,assessments.get(0).getStart());
-                    DateFormFiller.dateOnClickDatePicker(end,assessments.get(0).getEnd());
+                    DateFormFiller.dateOnClickDatePicker(start, assessments.get(0).getStart());
+                    DateFormFiller.dateOnClickDatePicker(end, assessments.get(0).getEnd());
                     description.setText(assessments.get(0).getDescription());
-                    this.assessment = assessments.get(0);
                 }
             });
         } else {
             DateFormFiller.dateOnClickDatePicker(start,null);
             DateFormFiller.dateOnClickDatePicker(end,null);
         }
+        assessmentViewModel.getAssessmentById(this.id).observe(getViewLifecycleOwner(),assessments -> {
+            if (!assessments.isEmpty()) {
+                this.assessment = assessments.get(0);
+            }
+        });
         return v;
     }
 
@@ -138,9 +156,13 @@ public class AddEditAssessmentFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.add_edit_menu,menu);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("title",title.getText().toString());
+        outState.putString("start",start.getText().toString());
+        outState.putString("end",end.getText().toString());
+        outState.putString("desc",description.getText().toString());
+        outState.putInt("type",getExamType().getNum());
     }
 
     @Override

@@ -113,6 +113,12 @@ public class AddEditCourseFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.add_edit_menu,menu);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course, container, false);
@@ -143,8 +149,13 @@ public class AddEditCourseFragment extends Fragment {
         instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
         assessmentViewModel = new ViewModelProvider(requireActivity()).get(AssessmentViewModel.class);
         courseInstructorViewModel = new ViewModelProvider(requireActivity()).get(CourseInstructorViewModel.class);
-        // Set field values as appropriate with edit or add.
-        if (edit) { //all methods that use the courseID
+        if (savedInstanceState != null) {
+           title.setText(savedInstanceState.getString("title"));
+           start.setText(savedInstanceState.getString("start"));
+           end.setText(savedInstanceState.getString("end"));
+           note.setText(savedInstanceState.getString("note"));
+           selectStatus(Status.values()[savedInstanceState.getInt("status")]);
+        } else if (edit) {
             courseViewModel.getCourseById(this.id).observe(getViewLifecycleOwner(), courses -> {
                 if (!courses.isEmpty()) {
                     title.setText(courses.get(0).getTitle());
@@ -154,21 +165,25 @@ public class AddEditCourseFragment extends Fragment {
                     DateFormFiller.dateOnClickDatePicker(end,courses.get(0).getEnd());
                     selectStatus(courses.get(0).getStatus());
                     note.setText(courses.get(0).getNote());
-                    this.course = courses.get(0);
-                }
-            });
-            //initialize working lists with current values.
-            courseViewModel.getAssociatedInstructors(this.id).observe(getViewLifecycleOwner(), instructors -> {
-                if (!instructors.isEmpty() && instructorViewModel.getWorkingList().getValue().isEmpty()) {
-                    instructorViewModel.setWorkingList(instructors);
-                }
-            });
-            courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(), assessments -> {
-                if (!assessments.isEmpty() && assessmentViewModel.getWorkingList().getValue().isEmpty()) {
-                    assessmentViewModel.addAllToWorkingList(assessments);
                 }
             });
         }
+        courseViewModel.getCourseById(this.id).observe(getViewLifecycleOwner(), courses -> {
+            if (!courses.isEmpty()) {
+                this.course = courses.get(0);
+            }
+        });
+        //initialize working lists with current values.
+        courseViewModel.getAssociatedInstructors(this.id).observe(getViewLifecycleOwner(), instructors -> {
+            if (!instructors.isEmpty() && instructorViewModel.getWorkingList().getValue().isEmpty()) {
+                instructorViewModel.setWorkingList(instructors);
+            }
+        });
+        courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(), assessments -> {
+            if (!assessments.isEmpty() && assessmentViewModel.getWorkingList().getValue().isEmpty()) {
+                assessmentViewModel.addAllToWorkingList(assessments);
+            }
+        });
         //Use ViewModel to display info until complete.
         instructorViewModel.getWorkingList().observe(getViewLifecycleOwner(), instructors -> {
             if (!instructors.isEmpty()) {
@@ -272,9 +287,13 @@ public class AddEditCourseFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.add_edit_menu,menu);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("title",title.getText().toString());
+        outState.putString("start",start.getText().toString());
+        outState.putString("end",end.getText().toString());
+        outState.putString("note",note.getText().toString());
+        outState.putInt("status",getCourseStatus().getNum());
     }
 
     @Override

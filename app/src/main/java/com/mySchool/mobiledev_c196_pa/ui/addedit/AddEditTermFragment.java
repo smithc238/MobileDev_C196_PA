@@ -101,7 +101,11 @@ public class AddEditTermFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
         courseViewModel = new ViewModelProvider(requireActivity()).get(CourseViewModel.class);
-        if (edit) {
+        if (savedInstanceState != null) {
+            title.setText(savedInstanceState.getString("title"));
+            start.setText(savedInstanceState.getString("start"));
+            end.setText(savedInstanceState.getString("end"));
+        } else if (edit) {
             termViewModel.getTerm().observe(getViewLifecycleOwner(), term -> {
                 if (term != null) {
                     title.setText(term.getTitle());
@@ -111,13 +115,13 @@ public class AddEditTermFragment extends Fragment {
                     DateFormFiller.dateOnClickDatePicker(end,term.getEnd());
                 }
             });
-            this.term = termViewModel.getTerm().getValue();
-            termViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
-                if (!courses.isEmpty() && courseViewModel.getWorkingList().getValue().isEmpty()) {
-                    courseViewModel.setWorkingList(courses);
-                }
-            });
         }
+        this.term = termViewModel.getTerm().getValue();
+        termViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
+            if (!courses.isEmpty() && courseViewModel.getWorkingList().getValue().isEmpty()) {
+                courseViewModel.setWorkingList(courses);
+            }
+        });
         courseViewModel.getWorkingList().observe(getViewLifecycleOwner(),courses -> {
             if (!courses.isEmpty()) {
                 adapter.setCourses(courses);
@@ -166,6 +170,14 @@ public class AddEditTermFragment extends Fragment {
         } else {
             getActivity().setTitle("Add Term");
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("title",title.getText().toString());
+        outState.putString("start",start.getText().toString());
+        outState.putString("end",end.getText().toString());
     }
 
     @Override

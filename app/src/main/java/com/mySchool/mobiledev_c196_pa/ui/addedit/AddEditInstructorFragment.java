@@ -90,17 +90,33 @@ public class AddEditInstructorFragment extends Fragment {
         name = v.findViewById(R.id.instructor_name);
         phone = v.findViewById(R.id.instructor_phone);
         email = v.findViewById(R.id.instructor_email);
-        if (edit) {
+        if (savedInstanceState != null) {
+            name.setText(savedInstanceState.getString("name"));
+            phone.setText(savedInstanceState.getString("phone"));
+            email.setText(savedInstanceState.getString("email"));
+        } else if (edit) {
             instructorViewModel.getInstructorById(this.id).observe(getViewLifecycleOwner(), instructors -> {
                 if (!instructors.isEmpty()) {
                     name.setText(instructors.get(0).getName());
                     phone.setText(instructors.get(0).getPhone());
                     email.setText(instructors.get(0).getEmail());
-                    this.instructor = instructors.get(0);
                 }
             });
         }
+        instructorViewModel.getInstructorById(this.id).observe(getViewLifecycleOwner(), instructors -> {
+            if (!instructors.isEmpty()) {
+                this.instructor = instructors.get(0);
+            }
+        });
         return v;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("name",name.getText().toString());
+        outState.putString("phone",phone.getText().toString());
+        outState.putString("email",email.getText().toString());
     }
 
     @Override
