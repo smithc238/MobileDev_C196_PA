@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -179,6 +180,13 @@ public class DetailedCourseFragment extends Fragment {
         title.setBackground(null);
         start.setBackground(null);
         end.setBackground(null);
+        planToTake.setClickable(false);
+        inProgress.setClickable(false);
+        complete.setClickable(false);
+        dropped.setClickable(false);
+        note.setClickable(false);
+        note.setFocusable(false);
+        note.setFocusableInTouchMode(false);
         note.setBackground(null);
         addInstructor.setVisibility(View.GONE);
         addAssessment.setVisibility(View.GONE);

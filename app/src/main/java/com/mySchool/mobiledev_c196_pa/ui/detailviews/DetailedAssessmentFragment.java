@@ -129,6 +129,8 @@ public class DetailedAssessmentFragment extends Fragment {
         title.setFocusable(false);
         title.setFocusableInTouchMode(false);
         title.setBackground(null);
+        objective.setClickable(false);
+        performance.setClickable(false);
         start.setBackground(null);
         end.setBackground(null);
         description.setClickable(false);
