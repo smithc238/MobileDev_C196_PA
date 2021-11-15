@@ -44,10 +44,14 @@ public class AppNotifications extends BroadcastReceiver {
      */
     public static void createNotificationChannel(Context context) {
         CharSequence course = context.getString(R.string.course_channel_name);
+        String courseDescription = context.getString(R.string.course_channel_desc);
         CharSequence assessment = context.getString(R.string.assessment_channel_name);
+        String assessmentDescription = context.getString(R.string.assessment_channel_desc);
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel courseChannel = new NotificationChannel(COURSE_CHANNEL, course, importance);
+        courseChannel.setDescription(courseDescription);
         NotificationChannel assessmentChannel = new NotificationChannel(ASSESSMENT_CHANNEL,assessment,importance);
+        assessmentChannel.setDescription(assessmentDescription);
         NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(courseChannel);
         notificationManager.createNotificationChannel(assessmentChannel);
