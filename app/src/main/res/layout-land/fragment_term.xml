@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/term_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:ems="13"
+            android:hint="@string/term_title"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/term_start_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_date"
+            app:layout_constraintBottom_toTopOf="@+id/term_start"
+            app:layout_constraintEnd_toEndOf="@+id/term_start"
+            app:layout_constraintStart_toStartOf="@+id/term_start" />
+
+        <EditText
+            android:id="@+id/term_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:ems="6"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="date"
+            android:minHeight="48dp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/term_title"
+            app:layout_constraintStart_toEndOf="@+id/term_title"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/term_end_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/end_date"
+            app:layout_constraintEnd_toEndOf="@+id/term_end"
+            app:layout_constraintHorizontal_bias="0.457"
+            app:layout_constraintStart_toStartOf="@+id/term_end"
+            app:layout_constraintTop_toTopOf="@+id/term_start_header" />
+
+        <EditText
+            android:id="@+id/term_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:ems="6"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="date"
+            android:minHeight="48dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@+id/term_start"
+            app:layout_constraintTop_toBottomOf="@+id/term_end_header"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/term_course_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/courses"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/term_start" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/term_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/term_course_header"
+            tools:listitem="@layout/item_course" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/term_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5"
+            tools:layout_constraintGuide_percent=".5" />
+
+        <TextView
+            android:id="@+id/term_noCourses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/add_a_course_to_save_the_term"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/term_course_header" />
+
+        <Button
+            android:id="@+id/term_addCourse_button"
+            style="@style/Theme.MySchool.Buttons"
+            android:text="@string/add_course"
+            app:layout_constraintBottom_toBottomOf="@+id/term_course_header"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

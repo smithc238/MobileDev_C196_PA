@@ -10,11 +10,12 @@
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:onClick="loginListener"
         android:text="@string/login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/schoolEmblem" />
+        app:layout_constraintBottom_toBottomOf="@+id/schoolEmblem"
+        app:layout_constraintEnd_toEndOf="@+id/schoolEmblem"
+        app:layout_constraintStart_toStartOf="@+id/schoolEmblem" />
 
     <ImageView
         android:id="@+id/schoolEmblem"
