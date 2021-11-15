@@ -34,8 +34,6 @@ import com.mySchool.mobiledev_c196_pa.utilities.AppNotifications;
 import com.mySchool.mobiledev_c196_pa.utilities.DateTimeConv;
 import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 
-import java.time.ZonedDateTime;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,7 +55,8 @@ public class DetailedCourseFragment extends Fragment {
     private TextView noteHeader;
     private EditText note;
     private boolean alarmIsOn;
-    private Menu menu;
+    private MenuItem alarmOn;
+    private MenuItem alarmOff;
 
 
     /**
@@ -94,7 +93,14 @@ public class DetailedCourseFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.detail_menu, menu);
-        this.menu = menu;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        alarmOff = menu.findItem(R.id.menu_detail_setNotification);
+        alarmOn = menu.findItem(R.id.menu_detail_cancelNotification);
+        setBellIcon();
     }
 
     @Override
@@ -130,11 +136,7 @@ public class DetailedCourseFragment extends Fragment {
             }
         });
         courseViewModel.getAssociatedInstructors(this.id).observe(getViewLifecycleOwner(), iAdapter::setInstructors);
-        courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(), assessments -> {
-            if (!assessments.isEmpty()) {
-                aAdapter.setAssessments(assessments);
-            }
-        });
+        courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(), aAdapter::setAssessments);
         iAdapter.setOnInstructorClickListener(instructor -> {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.detail_view_host, DetailedInstructorFragment.newInstance(instructor.getInstructorID()))
@@ -252,10 +254,7 @@ public class DetailedCourseFragment extends Fragment {
             nextScreen();
             return true;
         }
-        return super.
-
-                onOptionsItemSelected(item);
-
+        return super.onOptionsItemSelected(item);
     }
 
     private void nextScreen() {
@@ -270,18 +269,15 @@ public class DetailedCourseFragment extends Fragment {
         this.alarmIsOn = AppNotifications.checkPendingIntent(getActivity(), 1,
                 course.getTitle() + " ends today.",
                 (int) course.getCourseID(), true);
-        setBellIcon();
     }
 
     private void setBellIcon() {
-        MenuItem off = menu.findItem(R.id.menu_detail_setNotification);
-        MenuItem on = menu.findItem(R.id.menu_detail_cancelNotification);
         if (alarmIsOn) {
-            off.setVisible(false);
-            on.setVisible(true);
+            alarmOff.setVisible(false);
+            alarmOn.setVisible(true);
         } else {
-            off.setVisible(true);
-            on.setVisible(false);
+            alarmOff.setVisible(true);
+            alarmOn.setVisible(false);
         }
     }
 }

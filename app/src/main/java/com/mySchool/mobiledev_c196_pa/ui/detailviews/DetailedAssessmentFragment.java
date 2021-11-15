@@ -44,7 +44,8 @@ public class DetailedAssessmentFragment extends Fragment {
     private EditText end;
     private EditText description;
     private boolean alarmIsOn;
-    private Menu menu;
+    private MenuItem alarmOn;
+    private MenuItem alarmOff;
 
     /**
      * Required empty public constructor
@@ -80,7 +81,14 @@ public class DetailedAssessmentFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.detail_menu,menu);
         menu.removeItem(R.id.menu_detail_share);
-        this.menu = menu;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        alarmOff = menu.findItem(R.id.menu_detail_setNotification);
+        alarmOn = menu.findItem(R.id.menu_detail_cancelNotification);
+        setBellIcon();
     }
 
     @Override
@@ -199,18 +207,15 @@ public class DetailedAssessmentFragment extends Fragment {
         this.alarmIsOn = AppNotifications.checkPendingIntent(getActivity(),
                 2,assessment.getTitle() + " ends today.",
                 (int) assessment.getId(), true);
-        setBellIcon();
     }
 
     private void setBellIcon() {
-        MenuItem off = menu.findItem(R.id.menu_detail_setNotification);
-        MenuItem on = menu.findItem(R.id.menu_detail_cancelNotification);
         if (alarmIsOn) {
-            off.setVisible(false);
-            on.setVisible(true);
+            alarmOff.setVisible(false);
+            alarmOn.setVisible(true);
         } else {
-            off.setVisible(true);
-            on.setVisible(false);
+            alarmOff.setVisible(true);
+            alarmOn.setVisible(false);
         }
     }
 }
