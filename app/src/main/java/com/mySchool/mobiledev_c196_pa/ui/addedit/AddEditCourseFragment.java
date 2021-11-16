@@ -301,12 +301,16 @@ public class AddEditCourseFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("title",title.getText().toString());
-        outState.putString("start",start.getText().toString());
-        outState.putString("end",end.getText().toString());
-        outState.putString("note",note.getText().toString());
-        outState.putInt("status",getCourseStatus().getNum());
-        outState.putBoolean("firstCreated",firstCreated);
+        try {
+            outState.putString("title",title.getText().toString());
+            outState.putString("start",start.getText().toString());
+            outState.putString("end",end.getText().toString());
+            outState.putString("note",note.getText().toString());
+            outState.putInt("status",getCourseStatus().getNum());
+            outState.putBoolean("firstCreated",firstCreated);
+        } catch (NullPointerException e) {
+            //Throws if in the backstack after 2 rotations.
+        }
     }
 
     @Override

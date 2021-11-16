@@ -188,9 +188,14 @@ public class AddEditTermFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("title",title.getText().toString());
-        outState.putString("start",start.getText().toString());
-        outState.putString("end",end.getText().toString());
+        try {
+            outState.putString("title",title.getText().toString());
+            outState.putString("start",start.getText().toString());
+            outState.putString("end",end.getText().toString());
+        } catch (NullPointerException e) {
+            //Error is thrown if in the backstack and device is rotated twice.
+            //Works fine, just lost editText reference while in backstack.
+        }
     }
 
     @Override
