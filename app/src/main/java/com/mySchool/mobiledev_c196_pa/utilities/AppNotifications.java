@@ -74,7 +74,7 @@ public class AppNotifications extends BroadcastReceiver {
         // Ensure each PendingIntent has a unique request code.
         return PendingIntent.getBroadcast( context,
                 Integer.parseInt(type+""+id+""+separator),intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_ONE_SHOT + PendingIntent.FLAG_IMMUTABLE);
     }
     /**
      * To check if broadcast was already created.
@@ -92,7 +92,7 @@ public class AppNotifications extends BroadcastReceiver {
         intent.putExtra(TEXT, text);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context, Integer.parseInt(type+""+id+""+separator),intent,
-                PendingIntent.FLAG_NO_CREATE + PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_NO_CREATE + PendingIntent.FLAG_ONE_SHOT + PendingIntent.FLAG_IMMUTABLE);
         return pendingIntent != null;
     }
 }
