@@ -38,10 +38,6 @@ public class CourseInstructorViewModel extends AndroidViewModel {
         repo.delete(crossRef);
     }
 
-    public void removeAllCourseInstructors(long courseId) {
-        repo.removeAllCourseInstructors(courseId);
-    }
-
     public LiveData<List<CourseWithInstructors>> getCoursesWithInstructors() {
         return courseWithInstructors;
     }
@@ -50,17 +46,15 @@ public class CourseInstructorViewModel extends AndroidViewModel {
         return instructorsWithCourses;
     }
 
-    public void insertInstructorForCourse(long courseId, Instructor instructor) {
-        insert(new CourseInstructorCrossRef(courseId,instructor.getInstructorID()));
-    }
-    
     public void insertInstructorsForCourse(long courseId, List<Instructor> instructors) {
         for (Instructor instructor : instructors) {
             insert(new CourseInstructorCrossRef(courseId, instructor.getInstructorID()));
         }
     }
 
-    public void removeInstructorFromCourse(long courseId, long instructorId) {
-        delete(new CourseInstructorCrossRef(courseId,instructorId));
+    public void removeInstructorsFromCourse(long courseId, List<Instructor> instructors) {
+        for (Instructor instructor : instructors) {
+            delete(new CourseInstructorCrossRef(courseId,instructor.getInstructorID()));
+        }
     }
 }
