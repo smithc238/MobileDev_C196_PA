@@ -2,14 +2,6 @@ package com.mySchool.mobiledev_c196_pa.ui.addedit;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +11,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.CourseListAdapter;
@@ -32,7 +31,6 @@ import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +39,8 @@ import java.util.List;
  */
 public class AddEditTermFragment extends Fragment {
     private static final String TERM_ID = "id";
-    private boolean edit = false;
+    private boolean edit;
+    private boolean firstCreated;
     private long id;
     private TermViewModel termViewModel;
     private CourseViewModel courseViewModel;
@@ -51,7 +50,6 @@ public class AddEditTermFragment extends Fragment {
     private TextView noCourses;
     private Button addCourseButton;
     private Term term;
-    private List<Course> termCourses;
 
     /**
      * Required empty constructor.
@@ -81,6 +79,13 @@ public class AddEditTermFragment extends Fragment {
             id = getArguments().getLong(TERM_ID);
             edit = id > 0;
         }
+        firstCreated = true;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.add_edit_menu, menu);
     }
 
     @Override
@@ -116,16 +121,22 @@ public class AddEditTermFragment extends Fragment {
                 }
             });
         }
+        if (savedInstanceState == null && firstCreated) {
+            //initialize working lists with current values.
+            //workaround due to bad fragment structure to utilize ViewModels correctly.
+            firstCreated = false;
+            courseViewModel.getWorkingList().getValue().clear();
+            courseViewModel.getPendingDelete().getValue().clear();
+            termViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
+                if (!courses.isEmpty()) {
+                    courseViewModel.setWorkingList(courses);
+                }
+            });
+        }
         this.term = termViewModel.getTerm().getValue();
-        termViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
-            if (!courses.isEmpty() && courseViewModel.getWorkingList().getValue().isEmpty()) {
-                courseViewModel.setWorkingList(courses);
-            }
-        });
         courseViewModel.getWorkingList().observe(getViewLifecycleOwner(),courses -> {
             if (!courses.isEmpty()) {
                 adapter.setCourses(courses);
-                termCourses = courses;
                 noCourses.setVisibility(View.GONE);
             } else {
                 noCourses.setVisibility(View.VISIBLE);
@@ -154,8 +165,10 @@ public class AddEditTermFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 Course course = adapter.getCourseAt(viewHolder.getBindingAdapterPosition());
                 courseViewModel.removeFromWorkingList(course);
-                courseViewModel.delete(course);
-                if (termCourses.isEmpty()) { noCourses.setVisibility(View.VISIBLE); }
+                courseViewModel.addToPendingDelete(course);
+                if (adapter.getItemCount() == 0) {
+                    noCourses.setVisibility(View.VISIBLE);
+                }
                 adapter.notifyItemRemoved(viewHolder.getBindingAdapterPosition());
             }
         }).attachToRecyclerView(recyclerView);
@@ -181,12 +194,6 @@ public class AddEditTermFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.add_edit_menu, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_addedit_save) {
@@ -197,8 +204,10 @@ public class AddEditTermFragment extends Fragment {
                     termViewModel.update(this.term);
                 } else {
                     long rowID = termViewModel.insert(this.term);
-                    courseViewModel.updateFKs(rowID, termCourses);
+                    courseViewModel.updateFKs(rowID,
+                            courseViewModel.getWorkingList().getValue());
                 }
+                courseViewModel.deletePending();
                 nextScreen(false);
                 return true;
             }
@@ -275,12 +284,5 @@ public class AddEditTermFragment extends Fragment {
         } else {
             getParentFragmentManager().popBackStack();
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //Not really necessary as term is the base of activity, but just in case.
-        courseViewModel.getWorkingList().getValue().clear();
     }
 }

@@ -39,7 +39,6 @@ import com.mySchool.mobiledev_c196_pa.viewmodels.CourseViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,13 +51,12 @@ public class AddEditCourseFragment extends Fragment {
     private long id;
     private Long termId;
     private boolean edit;
+    private boolean firstCreated;
     private CourseViewModel courseViewModel;
     private InstructorViewModel instructorViewModel;
     private AssessmentViewModel assessmentViewModel;
     private CourseInstructorViewModel courseInstructorViewModel;
     private Course course;
-    private List<Instructor> courseInstructors;
-    private List<Assessment> courseAssessments;
     private EditText title;
     private EditText start;
     private EditText end;
@@ -110,6 +108,7 @@ public class AddEditCourseFragment extends Fragment {
             }
             edit = id > 0;
         }
+        firstCreated = true;
     }
 
     @Override
@@ -121,7 +120,7 @@ public class AddEditCourseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_course, container, false);
+        View v = inflater.inflate(R.layout.fragment_course,container,false);
         title = v.findViewById(R.id.course_title);
         start = v.findViewById(R.id.course_start);
         end = v.findViewById(R.id.course_end);
@@ -155,6 +154,7 @@ public class AddEditCourseFragment extends Fragment {
            end.setText(savedInstanceState.getString("end"));
            note.setText(savedInstanceState.getString("note"));
            selectStatus(Status.values()[savedInstanceState.getInt("status")]);
+           firstCreated = savedInstanceState.getBoolean("firstCreated");
         } else if (edit) {
             courseViewModel.getCourseById(this.id).observe(getViewLifecycleOwner(), courses -> {
                 if (!courses.isEmpty()) {
@@ -168,27 +168,34 @@ public class AddEditCourseFragment extends Fragment {
                 }
             });
         }
+        if (savedInstanceState == null && firstCreated) {
+            //initialize working lists with current values.
+            //workaround due to bad fragment structure to utilize ViewModels correctly.
+            firstCreated = false;
+            instructorViewModel.getWorkingList().getValue().clear();
+            instructorViewModel.getPendingRemove().getValue().clear();
+            assessmentViewModel.getWorkingList().getValue().clear();
+            assessmentViewModel.getPendingDelete().getValue().clear();
+            courseViewModel.getAssociatedInstructors(this.id).observe(getViewLifecycleOwner(), instructors -> {
+                if (!instructors.isEmpty()) {
+                    instructorViewModel.setWorkingList(instructors);
+                }
+            });
+            courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(), assessments -> {
+                if (!assessments.isEmpty()) {
+                    assessmentViewModel.setWorkingList(assessments);
+                }
+            });
+        }
         courseViewModel.getCourseById(this.id).observe(getViewLifecycleOwner(), courses -> {
             if (!courses.isEmpty()) {
                 this.course = courses.get(0);
-            }
-        });
-        //initialize working lists with current values.
-        courseViewModel.getAssociatedInstructors(this.id).observe(getViewLifecycleOwner(), instructors -> {
-            if (!instructors.isEmpty() && instructorViewModel.getWorkingList().getValue().isEmpty()) {
-                instructorViewModel.setWorkingList(instructors);
-            }
-        });
-        courseViewModel.getAssociatedAssessments(this.id).observe(getViewLifecycleOwner(), assessments -> {
-            if (!assessments.isEmpty() && assessmentViewModel.getWorkingList().getValue().isEmpty()) {
-                assessmentViewModel.addAllToWorkingList(assessments);
             }
         });
         //Use ViewModel to display info until complete.
         instructorViewModel.getWorkingList().observe(getViewLifecycleOwner(), instructors -> {
             if (!instructors.isEmpty()) {
                 iAdapter.setInstructors(instructors);
-                courseInstructors = instructors;
                 noInstructors.setVisibility(View.GONE);
             } else {
                 noInstructors.setVisibility(View.VISIBLE);
@@ -197,7 +204,6 @@ public class AddEditCourseFragment extends Fragment {
         assessmentViewModel.getWorkingList().observe(getViewLifecycleOwner(), assessments -> {
             if (!assessments.isEmpty()) {
                 aAdapter.setAssessments(assessments);
-                courseAssessments = assessments;
                 noAssessments.setVisibility(View.GONE);
             } else {
                 noAssessments.setVisibility(View.VISIBLE);
@@ -235,8 +241,12 @@ public class AddEditCourseFragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                instructorViewModel.removeFromWorkingList(iAdapter.getInstructorAt(viewHolder.getBindingAdapterPosition()));
-                if (courseInstructors.isEmpty()) { noInstructors.setVisibility(View.VISIBLE); }
+                Instructor instructor = iAdapter.getInstructorAt(viewHolder.getBindingAdapterPosition());
+                instructorViewModel.removeFromWorkingList(instructor);
+                instructorViewModel.addToPendingRemove(instructor);
+                if (iAdapter.getItemCount() == 0) {
+                    noInstructors.setVisibility(View.VISIBLE);
+                }
                 iAdapter.notifyItemRemoved(viewHolder.getBindingAdapterPosition());
             }
         }).attachToRecyclerView(instructorRecycler);
@@ -251,8 +261,10 @@ public class AddEditCourseFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 Assessment assessment = aAdapter.getAssessmentAt(viewHolder.getBindingAdapterPosition());
                 assessmentViewModel.removeFromWorkingList(assessment);
-                assessmentViewModel.delete(assessment);
-                if (courseAssessments.isEmpty()) { noAssessments.setVisibility(View.VISIBLE); }
+                assessmentViewModel.addToPendingDelete(assessment);
+                if (aAdapter.getItemCount() == 0) {
+                    noAssessments.setVisibility(View.VISIBLE);
+                }
                 aAdapter.notifyItemRemoved(viewHolder.getBindingAdapterPosition());
             }
         }).attachToRecyclerView(assessmentRecycler);
@@ -294,6 +306,7 @@ public class AddEditCourseFragment extends Fragment {
         outState.putString("end",end.getText().toString());
         outState.putString("note",note.getText().toString());
         outState.putInt("status",getCourseStatus().getNum());
+        outState.putBoolean("firstCreated",firstCreated);
     }
 
     @Override
@@ -304,21 +317,27 @@ public class AddEditCourseFragment extends Fragment {
                 buildCourse();
                 if (edit) {
                     courseViewModel.update(course);
-                    //For New term
+                    //For New term remove old object to update with new.
                     courseViewModel.removeFromWorkingList(course);
                     courseViewModel.addToWorkingList(course);
-                    //Entity relations
-                    courseInstructorViewModel.removeAllCourseInstructors(this.id);
-                    courseInstructorViewModel.insertInstructorsForCourse(this.id, courseInstructors);
+                    //Entity relations remove all old and insert new.
+                    courseInstructorViewModel.insertInstructorsForCourse(this.id,
+                            instructorViewModel.getWorkingList().getValue());
                 } else {
                     long rowID= courseViewModel.insert(course);
                     //For New term
                     course.setCourseID(rowID);
                     courseViewModel.addToWorkingList(course);
                     //Entity Relations
-                    courseInstructorViewModel.insertInstructorsForCourse(rowID,courseInstructors);
-                    assessmentViewModel.updateAssessmentFKeys(rowID, courseAssessments);
+                    courseInstructorViewModel.insertInstructorsForCourse(rowID,
+                            instructorViewModel.getWorkingList().getValue());
+                    assessmentViewModel.updateAssessmentFKeys(rowID,
+                            assessmentViewModel.getWorkingList().getValue());
                 }
+                instructorViewModel.checkPendingRemove();
+                courseInstructorViewModel.removeInstructorsFromCourse(this.id,
+                        instructorViewModel.getPendingRemove().getValue());
+                assessmentViewModel.deletePending();
                 nextScreen(false);
                 return true;
             }
@@ -411,12 +430,5 @@ public class AddEditCourseFragment extends Fragment {
         } else {
             getParentFragmentManager().popBackStack();
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        instructorViewModel.getWorkingList().getValue().clear();
-        assessmentViewModel.getWorkingList().getValue().clear();
     }
 }
