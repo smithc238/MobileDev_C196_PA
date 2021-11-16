@@ -17,12 +17,14 @@ public class AssessmentViewModel extends AndroidViewModel {
     private AssessmentRepo repo;
     private LiveData<List<Assessment>> allAssessments;
     private MutableLiveData<List<Assessment>> workingList;
+    private MutableLiveData<List<Assessment>> pendingDelete;
 
     public AssessmentViewModel(@NonNull Application application) {
         super(application);
         repo = new AssessmentRepo(application);
         allAssessments = repo.getAllAssessments();
         workingList = new MutableLiveData<>(new ArrayList<>());
+        pendingDelete = new MutableLiveData<>(new ArrayList<>());
     }
 
     public long insert(Assessment assessment) {
@@ -53,8 +55,8 @@ public class AssessmentViewModel extends AndroidViewModel {
         workingList.getValue().add(assessment);
     }
 
-    public void addAllToWorkingList(List<Assessment> assessments) {
-        workingList.postValue(assessments);
+    public void setWorkingList(List<Assessment> assessments) {
+        workingList.setValue(assessments);
     }
 
     public void removeFromWorkingList(Assessment assessment) {
@@ -72,5 +74,19 @@ public class AssessmentViewModel extends AndroidViewModel {
             assessment.setCourseId(id);
             update(assessment);
         }
+    }
+
+    public void addToPendingDelete(Assessment assessment) {
+        pendingDelete.getValue().add(assessment);
+    }
+
+    public void deletePending() {
+        for (Assessment assessment : pendingDelete.getValue()) {
+            delete(assessment);
+        }
+    }
+
+    public LiveData<List<Assessment>> getPendingDelete() {
+        return pendingDelete;
     }
 }

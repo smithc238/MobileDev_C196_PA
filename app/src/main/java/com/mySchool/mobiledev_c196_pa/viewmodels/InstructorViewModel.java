@@ -17,12 +17,14 @@ public class InstructorViewModel extends AndroidViewModel {
     private InstructorRepo repo;
     private LiveData<List<Instructor>> allInstructors;
     private MutableLiveData<List<Instructor>> workingList;
+    private MutableLiveData<List<Instructor>> pendingRemove;
 
     public InstructorViewModel(@NonNull Application application) {
         super(application);
         repo = new InstructorRepo(application);
         allInstructors = repo.getAllInstructors();
         workingList = new MutableLiveData<>(new ArrayList<>());
+        pendingRemove = new MutableLiveData<>(new ArrayList<>());
     }
 
     public void insert(Instructor instructor) {
@@ -65,5 +67,20 @@ public class InstructorViewModel extends AndroidViewModel {
 
     public LiveData<List<Instructor>> getWorkingList() {
         return workingList;
+    }
+
+    public void addToPendingRemove(Instructor instructor) {
+        pendingRemove.getValue().add(instructor);
+    }
+
+    public LiveData<List<Instructor>> getPendingRemove() {
+        return pendingRemove;
+    }
+
+    public void checkPendingRemove() {
+        for (Instructor instructor : workingList.getValue()) {
+            pendingRemove.getValue().removeIf(item ->
+                    item.getInstructorID() == instructor.getInstructorID());
+        }
     }
 }

@@ -19,12 +19,14 @@ public class CourseViewModel extends AndroidViewModel {
     private CourseRepo repo;
     private LiveData<List<Course>> allCourses;
     private MutableLiveData<List<Course>> workingList;
+    private MutableLiveData<List<Course>> pendingDelete;
 
     public CourseViewModel(@NonNull Application application) {
         super(application);
         repo = new CourseRepo(application);
         allCourses = repo.getAllCourses();
         workingList = new MutableLiveData<>(new ArrayList<>());
+        pendingDelete = new MutableLiveData<>(new ArrayList<>());
     }
 
     public long insert(Course course) {
@@ -81,5 +83,19 @@ public class CourseViewModel extends AndroidViewModel {
 
     public LiveData<List<Course>> getWorkingList() {
         return workingList;
+    }
+
+    public void addToPendingDelete(Course course) {
+        pendingDelete.getValue().add(course);
+    }
+
+    public void deletePending() {
+        for (Course course: pendingDelete.getValue()) {
+            delete(course);
+        }
+    }
+
+    public LiveData<List<Course>> getPendingDelete() {
+        return pendingDelete;
     }
 }
