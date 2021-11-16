@@ -26,11 +26,9 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_view);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
         Intent intent = getIntent();
         this.type = intent.getIntExtra(TYPE, 0);
         this.id = intent.getLongExtra(ID,-1);
-
         if (savedInstanceState == null) {
             fragmentLauncher(fragmentSwitch(this.type));
         }

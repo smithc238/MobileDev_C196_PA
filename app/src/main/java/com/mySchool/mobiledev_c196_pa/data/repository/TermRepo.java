@@ -1,7 +1,6 @@
 package com.mySchool.mobiledev_c196_pa.data.repository;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 

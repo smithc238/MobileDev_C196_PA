@@ -2,19 +2,16 @@ package com.mySchool.mobiledev_c196_pa.ui.listviews;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.InstructorsListAdapter;
@@ -63,9 +60,8 @@ public class InstructorListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
-        instructorViewModel.getAllInstructors().observe(getViewLifecycleOwner(), instructors -> {
-            adapter.setInstructors(instructors);
-        });
+        instructorViewModel.getAllInstructors().observe(getViewLifecycleOwner(),
+                adapter::setInstructors);
         adapter.setOnInstructorClickListener(instructor -> {
             Intent intent = DetailActivity.intentLoader(
                     getActivity(), 4,  instructor.getInstructorID());

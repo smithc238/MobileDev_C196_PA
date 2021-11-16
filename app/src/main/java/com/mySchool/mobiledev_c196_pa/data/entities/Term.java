@@ -13,7 +13,7 @@ public class Term {
     private ZonedDateTime start;
     private ZonedDateTime end;
 
-    public Term(String title, ZonedDateTime start, ZonedDateTime end) {
+    public Term(@NonNull String title, ZonedDateTime start, ZonedDateTime end) {
         this.title = title;
         this.start = start;
         this.end = end;
@@ -27,11 +27,12 @@ public class Term {
         this.id = id;
     }
 
+    @NonNull
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@NonNull String title) {
         this.title = title;
     }
 

@@ -1,5 +1,7 @@
 package com.mySchool.mobiledev_c196_pa.data.entities;
 
+import androidx.annotation.NonNull;
+
 public enum ExamType {
     OBJECTIVE(0,"Objective"),
     PERFORMANCE(1,"Performance");
@@ -11,6 +13,7 @@ public enum ExamType {
         this.type = type;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return type;

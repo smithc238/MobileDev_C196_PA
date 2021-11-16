@@ -1,5 +1,7 @@
 package com.mySchool.mobiledev_c196_pa.data.entities;
 
+import androidx.annotation.NonNull;
+
 public enum Status {
     PLAN_TO_TAKE(0, "Plan to take"),
     IN_PROGRESS(1, "In progress"),
@@ -13,6 +15,7 @@ public enum Status {
         this.status = status;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return status;

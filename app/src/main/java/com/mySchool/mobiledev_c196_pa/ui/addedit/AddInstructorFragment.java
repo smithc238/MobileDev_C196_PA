@@ -1,6 +1,12 @@
 package com.mySchool.mobiledev_c196_pa.ui.addedit;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -8,19 +14,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.InstructorsListAdapter;
-import com.mySchool.mobiledev_c196_pa.data.entities.Instructor;
-import com.mySchool.mobiledev_c196_pa.viewmodels.CourseInstructorViewModel;
 import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 
 /**
@@ -31,9 +26,7 @@ import com.mySchool.mobiledev_c196_pa.viewmodels.InstructorViewModel;
 public class AddInstructorFragment extends Fragment {
     private static final String COURSE_ID = "id";
     private long id;
-    private boolean edit;
     private InstructorViewModel instructorViewModel;
-    private CourseInstructorViewModel courseInstructorViewModel;
 
     /**
      * Required empty public constructor
@@ -61,7 +54,6 @@ public class AddInstructorFragment extends Fragment {
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             id = getArguments().getLong(COURSE_ID);
-            edit = this.id > 0;
         }
     }
 
@@ -76,10 +68,8 @@ public class AddInstructorFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         instructorViewModel = new ViewModelProvider(requireActivity()).get(InstructorViewModel.class);
-        courseInstructorViewModel = new ViewModelProvider(requireActivity()).get(CourseInstructorViewModel.class);
-        instructorViewModel.getAllInstructors().observe(getViewLifecycleOwner(), instructors -> {
-            adapter.setInstructors(instructors);
-        });
+        instructorViewModel.getAllInstructors().observe(getViewLifecycleOwner(),
+                instructors -> adapter.setInstructors(instructors));
         adapter.setOnInstructorClickListener(instructor -> {
             instructorViewModel.addToWorkingList(instructor);
             getParentFragmentManager().popBackStack();

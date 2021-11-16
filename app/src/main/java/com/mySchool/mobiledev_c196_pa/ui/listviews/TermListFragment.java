@@ -2,6 +2,10 @@ package com.mySchool.mobiledev_c196_pa.ui.listviews;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -9,21 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.mySchool.mobiledev_c196_pa.R;
 import com.mySchool.mobiledev_c196_pa.adapters.TermListAdapter;
 import com.mySchool.mobiledev_c196_pa.ui.detailviews.DetailActivity;
 import com.mySchool.mobiledev_c196_pa.viewmodels.TermViewModel;
 
 public class TermListFragment extends Fragment {
-
-    private TermViewModel termViewModel;
 
     public TermListFragment() {
     }
@@ -43,7 +38,7 @@ public class TermListFragment extends Fragment {
         TermListAdapter adapter = new TermListAdapter(v.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-        termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
+        TermViewModel termViewModel = new ViewModelProvider(requireActivity()).get(TermViewModel.class);
         termViewModel.getAllTerms().observe(getViewLifecycleOwner(), adapter::setTerms);
         adapter.setOnTermClickListener(term -> {
             Intent intent = DetailActivity.intentLoader(
