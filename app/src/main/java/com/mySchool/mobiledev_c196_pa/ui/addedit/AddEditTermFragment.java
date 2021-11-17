@@ -125,7 +125,6 @@ public class AddEditTermFragment extends Fragment {
             //initialize working lists with current values.
             //workaround due to bad fragment structure to utilize ViewModels correctly.
             firstCreated = false;
-            courseViewModel.getWorkingList().getValue().clear();
             courseViewModel.getPendingDelete().getValue().clear();
             termViewModel.getAssociatedCourses(id).observe(getViewLifecycleOwner(), courses -> {
                 if (!courses.isEmpty()) {

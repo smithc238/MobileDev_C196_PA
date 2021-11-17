@@ -172,9 +172,7 @@ public class AddEditCourseFragment extends Fragment {
             //initialize working lists with current values.
             //workaround due to bad fragment structure to utilize ViewModels correctly.
             firstCreated = false;
-            instructorViewModel.getWorkingList().getValue().clear();
             instructorViewModel.getPendingRemove().getValue().clear();
-            assessmentViewModel.getWorkingList().getValue().clear();
             assessmentViewModel.getPendingDelete().getValue().clear();
             courseViewModel.getAssociatedInstructors(this.id).observe(getViewLifecycleOwner(), instructors -> {
                 if (!instructors.isEmpty()) {
