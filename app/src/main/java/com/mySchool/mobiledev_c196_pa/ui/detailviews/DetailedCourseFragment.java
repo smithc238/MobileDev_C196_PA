@@ -110,9 +110,7 @@ public class DetailedCourseFragment extends Fragment {
         RecyclerView instructorRecycler = v.findViewById(R.id.course_instructor_recyclerView);
         RecyclerView assessmentRecycler = v.findViewById(R.id.course_assessment_recyclerView);
         instructorRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        instructorRecycler.setHasFixedSize(true);
         assessmentRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        assessmentRecycler.setHasFixedSize(true);
         InstructorsListAdapter iAdapter = new InstructorsListAdapter(v.getContext());
         instructorRecycler.setAdapter(iAdapter);
         AssessmentListAdapter aAdapter = new AssessmentListAdapter(v.getContext());
